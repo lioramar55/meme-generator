@@ -59,6 +59,30 @@ var gImgs = [
     keywords: ['toy story', 'buzz', 'buzz oldrin', 'explaining'],
   },
 ]
+var gMeme = {
+  selectedImgId: null,
+  selectedLineIdx: 0,
+  lines: [
+    {
+      txt: '',
+      size: 30,
+      stroke: false,
+      align: 'left',
+      color: '#111',
+      font: 'Impact',
+      x: 100,
+      y: 100,
+    },
+  ],
+}
+
+function getMeme() {
+  return gMeme
+}
+
+function getCurrentLine() {
+  return gMeme.lines[gMeme.selectedLineIdx]
+}
 
 function getImagesForDisplay() {
   return gImgs
@@ -78,4 +102,31 @@ function getTagsForDisplay() {
     })
   })
   return { tags: gKeywordSearchCountMap, tagCount: gTagCount }
+}
+
+function isHoveringLine(x, y) {
+  let isLineSelected = false
+  let selectedLine
+  gMeme.lines.forEach((line, idx) => {
+    var lineWidth = gCtx.measureText(line.txt).width
+    var lineHeight = gCtx.measureText(line.txt).fontBoundingBoxDescent
+    if (x >= line.x && y >= line.y - 50 && x <= line.x + lineWidth && y < line.y + lineHeight) {
+      isLineSelected = true
+      selectedLine = idx
+    }
+  })
+  return isLineSelected ? selectedLine : -1
+}
+
+function setMemeColor(color) {
+  gMeme.lines[gMeme.selectedLineIdx].color = color
+}
+
+function toggleTextStroke() {
+  gMeme.lines[gMeme.selectedLineIdx].stroke = !gMeme.lines[gMeme.selectedLineIdx].stroke
+}
+
+function addNewLine(newLine) {
+  gMeme.selectedLineIdx++
+  gMeme.lines.push(newLine)
 }

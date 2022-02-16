@@ -3,26 +3,11 @@
 var gCanvas
 var gCtx
 var gIsShowTags = false
+var gIsMobile = false
+var gSelectedImg
 var gDrag = {
   isOn: false,
   startPos: {},
-}
-
-var gMeme = {
-  selectedImgId: 5,
-  selectedImg: '',
-  selectedLineIdx: 0,
-  lines: [
-    {
-      txt: '',
-      size: 30,
-      align: 'left',
-      color: 'black',
-      font: 'Impact',
-      x: 100,
-      y: 100,
-    },
-  ],
 }
 
 function init() {
@@ -44,8 +29,10 @@ function addEditorListeners() {
   document.querySelector('.meme-editor input[type=text]').addEventListener('input', onUserType)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focus', onSelectLine)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focusout', drawCanvas)
+  document.querySelector('.meme-editor input[type=color]').addEventListener('input', onSetColor)
   document.querySelector('.add').addEventListener('click', onAddLine)
   document.querySelector('.switch').addEventListener('click', onSwitchLine)
+  document.querySelector('.text-stroke').addEventListener('click', onTextStroke)
   document.querySelector('.trash').addEventListener('click', onDeleteLine)
   document.querySelector('.increase-font').addEventListener('click', changeFontSize)
   document.querySelector('.decrease-font').addEventListener('click', changeFontSize)
@@ -62,12 +49,101 @@ function addCanvasListeners() {
   gCanvas.addEventListener('mouseup', stopDrag)
 }
 
+// Canvas Functions
+
+function drawCanvas(e, isCleanCanvas = false) {
+  var meme = getMeme()
+  // checking if there is a current image
+  if (meme.selectedImgId) gCtx.drawImage(gSelectedImg, 0, 0)
+  if (isCleanCanvas) return
+
+  // TODO: is mobile
+  if (window.innerWidth < 780) {
+    gIsMobile = true
+  }
+  // looping throung each line in meme.lines
+  meme.lines.forEach((line) => {
+    if (line.txt) {
+      if (meme.lines[meme.selectedLineIdx].stroke) {
+        gCtx.strokeText(line.txt, line.x, line.y, 140)
+      } else gCtx.fillText(line.txt, line.x, line.y)
+    }
+    gCtx.font = line.size + 'px' + ' ' + line.font
+    gCtx.fillStyle = line.color
+  })
+}
+
+function onCanvasClick(e) {
+  const x = e.offsetX
+  const y = e.offsetY
+  var selectedLine = isHoveringLine(x, y)
+  if (selectedLine !== -1) {
+    gMeme.selectedLineIdx = selectedLine
+    onSelectLine(selectedLine)
+  } else {
+    drawCanvas()
+  }
+}
+
 function onCanvasDownload() {
   var dataURL = gCanvas.toDataURL('image/jpeg')
   var elLink = document.querySelector('.download')
   elLink.href = dataURL
   elLink.download = 'My-Meme.jpg'
   elLink.click()
+}
+
+// Drag Lines
+
+function startDrag(e) {
+  const x = e.offsetX
+  const y = e.offsetY
+  var selectedLine = isHoveringLine(x, y)
+  if (selectedLine !== -1) {
+    document.body.style.cursor = 'grabbing'
+    gDrag.isOn = true
+    gDrag.startPos = { x, y }
+  }
+}
+
+function moveLine(e) {
+  const x = e.offsetX
+  const y = e.offsetY
+  if (isHoveringLine(x, y) !== -1) document.body.style.cursor = 'grab'
+  else document.body.style.cursor = 'default'
+  if (!gDrag.isOn) return
+  var selectedLine = isHoveringLine(x, y)
+  if (selectedLine !== -1) {
+    gMeme.lines[selectedLine].x += x - gDrag.startPos.x
+    gMeme.lines[selectedLine].y += y - gDrag.startPos.y
+    gDrag.startPos = { x, y }
+  }
+  drawCanvas()
+}
+
+function stopDrag() {
+  gDrag.isOn = false
+}
+
+function onSelectLine(selectedLine) {
+  var currLine = getCurrentLine()
+  if (!currLine || !currLine.txt) return
+  // checking if user toggles between lines
+  if (selectedLine !== currLine) drawCanvas()
+  // var txt = gCtx.measureText(currLine.txt)
+  // var lineHeight = txt.actualBoundingBoxAscent
+  // Setting text box outline settings
+  var rectWidth = gCanvas.width - 40
+  gCtx.strokeStyle = currLine.stroke ? '#f0f0f0' : '#111'
+  gCtx.lineWidth = 3
+  gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
+}
+
+// Editor Functions
+
+function onTextStroke(e) {
+  toggleTextStroke()
+  drawCanvas()
 }
 
 function alignText(e) {
@@ -77,7 +153,7 @@ function alignText(e) {
   else if (elClassList.contains('align-to-right')) alignTo = 'right'
   else alignTo = 'center'
 
-  var currLine = gMeme.lines[gMeme.selectedLineIdx]
+  var currLine = getCurrentLine()
   switch (alignTo) {
     case 'left':
       currLine.x = 30
@@ -95,54 +171,12 @@ function alignText(e) {
   onSelectLine()
 }
 
-function startDrag(e) {
-  const x = e.offsetX
-  const y = e.offsetY
-  var selectedLine = isUserOnLine(x, y)
-  if (selectedLine !== -1) {
-    document.body.style.cursor = 'grabbing'
-    gDrag.isOn = true
-    gDrag.startPos = { x, y }
-  }
-}
-
-function moveLine(e) {
-  const x = e.offsetX
-  const y = e.offsetY
-  if (isUserOnLine(x, y) !== -1) document.body.style.cursor = 'grab'
-  else document.body.style.cursor = 'default'
-  if (!gDrag.isOn) return
-  var selectedLine = isUserOnLine(x, y)
-  if (selectedLine !== -1) {
-    gMeme.lines[selectedLine].x += x - gDrag.startPos.x
-    gMeme.lines[selectedLine].y += y - gDrag.startPos.y
-    gDrag.startPos = { x, y }
-  }
-  drawCanvas()
-}
-
-function stopDrag() {
-  gDrag.isOn = false
-}
-
 function changeFontSize(e) {
   var isIncrease = e.path[1].classList.contains('increase-font')
   if (isIncrease) gMeme.lines[gMeme.selectedLineIdx].size++
   else gMeme.lines[gMeme.selectedLineIdx].size--
   drawCanvas()
   onSelectLine()
-}
-
-function onCanvasClick(e) {
-  const x = e.offsetX
-  const y = e.offsetY
-  var selectedLine = isUserOnLine(x, y)
-  if (selectedLine !== -1) {
-    gMeme.selectedLineIdx = selectedLine
-    onSelectLine(selectedLine)
-  } else {
-    drawCanvas()
-  }
 }
 
 function onDeleteLine() {
@@ -175,61 +209,36 @@ function onUserType(e) {
   gCtx.fillText(currLine.txt, currLine.x, currLine.y)
 }
 
-function onSelectLine(selectedLine) {
-  if (selectedLine !== gMeme.lines[gMeme.selectedLineIdx]) drawCanvas()
-  var currLine = gMeme.lines[gMeme.selectedLineIdx]
-  if (!currLine || !currLine.txt) return
-  // var txt = gCtx.measureText(currLine.txt)
-  // var lineHeight = txt.actualBoundingBoxAscent
-  var rectWidth = gCanvas.width - 40
-  gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
-}
-
-function isUserOnLine(x, y) {
-  let isLineSelected = false
-  let selectedLine
-  gMeme.lines.forEach((line, idx) => {
-    var lineWidth = gCtx.measureText(line.txt).width
-    var lineHeight = gCtx.measureText(line.txt).fontBoundingBoxDescent
-    if (x >= line.x && y >= line.y - 50 && x <= line.x + lineWidth && y < line.y + lineHeight) {
-      isLineSelected = true
-      selectedLine = idx
-    }
-  })
-  return isLineSelected ? selectedLine : -1
-}
-
 function onSwitchLine() {
-  if (gMeme.lines.length === 1) return
-  if (gMeme.selectedLineIdx === gMeme.lines.length - 1) gMeme.selectedLineIdx = 0
-  else gMeme.selectedLineIdx++
+  var meme = getMeme()
+  if (meme.lines.length === 1) return
+  if (meme.selectedLineIdx === meme.lines.length - 1) meme.selectedLineIdx = 0
+  else meme.selectedLineIdx++
   drawCanvas()
   onSelectLine()
 }
 
 function onAddLine() {
   document.querySelector('.meme-editor input[type=text]').value = ''
-  var yCoord = gMeme.lines.length === 1 ? gCanvas.height - 100 : gCanvas.height / 2
+  var meme = getMeme()
+  var yCoord = meme.lines.length === 1 ? gCanvas.height - 100 : gCanvas.height / 2
   var newLine = {
     txt: '',
     size: 30,
     align: 'left',
     color: 'black',
     font: 'Impact',
+    stroke: false,
     x: 100,
     y: yCoord,
   }
-  gMeme.selectedLineIdx++
-  gMeme.lines.push(newLine)
+  document.querySelector('.meme-editor input[type=text]').focus()
+  addNewLine(newLine)
 }
 
-function drawCanvas(e, redrawCanvas) {
-  if (gMeme.selectedImg) gCtx.drawImage(gMeme.selectedImg, 0, 0)
-  if (redrawCanvas) return
-  gMeme.lines.forEach((line) => {
-    gCtx.font = line.size + 'px' + ' ' + line.font
-    if (line.txt) gCtx.fillText(line.txt, line.x, line.y)
-  })
+function onSetColor(e) {
+  setMemeColor(e.target.value)
+  drawCanvas()
 }
 
 function renderGallery() {
@@ -245,29 +254,46 @@ function showMemeEditor() {
   document.querySelector('.gallery').classList.add('hide-gallery')
   document.querySelector('.info').style.display = 'none'
   document.querySelector('.meme-editor').style.display = 'flex'
+  // reseting values and focus on the text input
   document.querySelector('.meme-editor input[type=text]').value = ''
+  document.querySelector('.meme-editor input[type=text]').focus()
 }
 
-function onImgClick(img, elImg) {
-  // update gImg
-  gImgs.selectedImgId = img.id
+function onImgClick(id, elImg) {
+  // update gSelectedImg
+
+  gSelectedImg = elImg
   // show the meme editor
   showMemeEditor()
 
   //setting the canvas height and width
-  gCanvas.height = elImg.naturalHeight
-  gCanvas.width = elImg.naturalWidth
+  setCanvasDimensions()
 
   // Add Canvas Event Listeners
   addCanvasListeners()
 
-  // draw the image on the canvas
-  gMeme.selectedImgId = img.id
-  gMeme.selectedImg = elImg
-  drawCanvas(undefined, true)
+  //Initilize the canvas
+  initCanvas(id)
+}
 
+function initCanvas(id) {
+  var meme = getMeme()
+  // draw the image on the canvas
+  meme.selectedImgId = id
+  drawCanvas(undefined, true)
   // initilize gCtx
-  gCtx.font = '30px Impact'
+  gCtx.font = `${meme.lines[0].font}px ${meme.lines[0].font}`
+}
+
+function setCanvasDimensions() {
+  var height = gSelectedImg.naturalHeight
+  var width = gSelectedImg.naturalWidth
+  var aspectRatio = Math.min(height / width, width / height)
+  // Check if the user is in mobile
+  width = aspectRatio * width * 0.75
+
+  gCanvas.height = height
+  gCanvas.width = width
 }
 
 function openMemes() {
