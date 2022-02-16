@@ -48,6 +48,16 @@ function addEditorListeners() {
   document.querySelector('.align-to-left').addEventListener('click', alignText)
   document.querySelector('.align-to-right').addEventListener('click', alignText)
   document.querySelector('.center-align-text').addEventListener('click', alignText)
+  document.querySelector('.download').addEventListener('click', onCanvasDownload)
+}
+
+function onCanvasDownload() {
+  var dataURL = gCanvas.toDataURL('image/jpeg')
+  var elLink = document.querySelector('.download')
+  elLink.href = dataURL
+  console.log('elLink.href', elLink.href)
+  elLink.download = 'My-Meme.jpg'
+  elLink.click()
 }
 
 function alignText(e) {

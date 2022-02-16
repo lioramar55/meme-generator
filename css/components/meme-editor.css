@@ -16,6 +16,19 @@
   background-color: var(--clr-btn);
   border-radius: 1.5rem;
 }
+
+.meme-editor a {
+  border-radius: 1.5rem;
+  cursor: pointer;
+}
+
+.meme-editor a,
+a:active,
+a:visited,
+a:hover {
+  text-decoration: none;
+}
+
 .meme-editor button img {
   height: 2rem;
   width: 2rem;
