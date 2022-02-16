@@ -45,6 +45,35 @@ function addEditorListeners() {
   document.querySelector('.trash').addEventListener('click', onDeleteLine)
   document.querySelector('.increase-font').addEventListener('click', changeFontSize)
   document.querySelector('.decrease-font').addEventListener('click', changeFontSize)
+  document.querySelector('.align-to-left').addEventListener('click', alignText)
+  document.querySelector('.align-to-right').addEventListener('click', alignText)
+  document.querySelector('.center-align-text').addEventListener('click', alignText)
+}
+
+function alignText(e) {
+  var elClassList = e.path[1].classList
+  var alignTo = elClassList.contains('align-to-left')
+    ? 'left'
+    : elClassList.contains('align-to-right')
+    ? 'right'
+    : 'center'
+
+  var currLine = gMeme.lines[gMeme.selectedLineIdx]
+  switch (alignTo) {
+    case 'left':
+      currLine.x = gCanvas.width / 10
+      break
+    case 'right':
+      currLine.x =
+        gCanvas.width - gCtx.measureText(currLine.txt).width / 2 - gCanvas.width * (2 / 10)
+
+      break
+    case 'center':
+      currLine.x = gCanvas.width / 2 - gCtx.measureText(currLine.txt).width / 2
+      break
+  }
+  drawCanvas()
+  onSelectLine()
 }
 
 function addCanvasListeners() {
