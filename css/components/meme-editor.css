@@ -88,8 +88,19 @@ a:hover {
 .text-stroke {
   grid-area: 4/4;
 }
-.brush {
+
+label[for='color'] {
   grid-area: 4/5;
+  position: relative;
+}
+
+.brush {
+  cursor: pointer;
+  background-color: none;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  opacity: 0;
 }
 
 .meme-editor .download {

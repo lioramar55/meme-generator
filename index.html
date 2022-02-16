@@ -29,7 +29,7 @@
           </div>
           <div class="tags">
             <ul class="clean-list"></ul>
-            <button>See more</button>
+            <button>Show More</button>
           </div>
         </section>
         <section class="gallery grid"></section>
@@ -51,7 +51,10 @@
               <option value="impact">Impact</option>
             </select>
             <button class="text-stroke"><img src="assets/icons/text-stroke.png" /></button>
-            <button class="brush"><img src="assets/icons/brush.png" /></button>
+            <label for="color">
+              <img src="assets/icons/brush.png" alt="" />
+              <input class="brush" type="color" name="color" id="color" />
+            </label>
             <a class="download">Download</a>
             <a class="share">Share</a>
           </div>
@@ -60,7 +63,6 @@
       </main>
       <footer><h4>Meme-Generator by Lior R Amar</h4></footer>
     </div>
-
     <script src="js/memesSentences.js"></script>
     <!-- <script src="lib/hammer.min.js"></script> -->
     <script src="js/services/i18n-service.js"></script>

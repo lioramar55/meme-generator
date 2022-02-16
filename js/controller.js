@@ -2,6 +2,7 @@
 
 var gCanvas
 var gCtx
+var gIsShowTags = false
 var gDrag = {
   isOn: false,
   startPos: {},
@@ -28,6 +29,8 @@ function init() {
   addEventListeners()
   renderInfoSection()
   renderGallery()
+  gCanvas = document.querySelector('.meme-editor canvas')
+  gCtx = gCanvas.getContext('2d')
 }
 
 function addEventListeners() {
@@ -37,7 +40,7 @@ function addEventListeners() {
 }
 
 function addEditorListeners() {
-  document.querySelector('.tags button').addEventListener('click', showAllTags)
+  document.querySelector('.tags button').addEventListener('click', toggleTags)
   document.querySelector('.meme-editor input[type=text]').addEventListener('input', onUserType)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focus', onSelectLine)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focusout', drawCanvas)
@@ -63,25 +66,25 @@ function onCanvasDownload() {
   var dataURL = gCanvas.toDataURL('image/jpeg')
   var elLink = document.querySelector('.download')
   elLink.href = dataURL
-  console.log('elLink.href', elLink.href)
   elLink.download = 'My-Meme.jpg'
   elLink.click()
 }
 
 function alignText(e) {
   var elClassList = e.path[1].classList
-  var alignTo = elClassList.contains('align-to-left')
-    ? 'left'
-    : elClassList.contains('align-to-right')
-    ? 'right'
-    : 'center'
+  var alignTo
+  if (elClassList.contains('align-to-left')) alignTo = 'left'
+  else if (elClassList.contains('align-to-right')) alignTo = 'right'
+  else alignTo = 'center'
+
+  var currLine = gMeme.lines[gMeme.selectedLineIdx]
   switch (alignTo) {
     case 'left':
-      currLine.x = gCanvas.width / 10
+      currLine.x = 30
       break
     case 'right':
       var lineWidth = gCtx.measureText(currLine.txt).width
-      var xCoord = currLine.x + lineWidth + 100
+      var xCoord = gCanvas.width - lineWidth - 30
       currLine.x = xCoord
       break
     case 'center':
@@ -176,9 +179,10 @@ function onSelectLine(selectedLine) {
   if (selectedLine !== gMeme.lines[gMeme.selectedLineIdx]) drawCanvas()
   var currLine = gMeme.lines[gMeme.selectedLineIdx]
   if (!currLine || !currLine.txt) return
-  var lineHeight = gCtx.measureText(currLine.txt).fontBoundingBoxDescent
-  var rectWidth = gCanvas.width * (8 / 10)
-  gCtx.strokeRect(gCanvas.width / 10, currLine.y - 50, rectWidth, currLine.y + lineHeight - 25)
+  // var txt = gCtx.measureText(currLine.txt)
+  // var lineHeight = txt.actualBoundingBoxAscent
+  var rectWidth = gCanvas.width - 40
+  gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
 }
 
 function isUserOnLine(x, y) {
@@ -219,8 +223,9 @@ function onAddLine() {
   gMeme.lines.push(newLine)
 }
 
-function drawCanvas() {
-  gCtx.drawImage(gMeme.selectedImg, 0, 0)
+function drawCanvas(e, redrawCanvas) {
+  if (gMeme.selectedImg) gCtx.drawImage(gMeme.selectedImg, 0, 0)
+  if (redrawCanvas) return
   gMeme.lines.forEach((line) => {
     gCtx.font = line.size + 'px' + ' ' + line.font
     if (line.txt) gCtx.fillText(line.txt, line.x, line.y)
@@ -235,26 +240,32 @@ function renderGallery() {
   document.querySelector('.gallery').innerHTML = strHTMLs.join('')
 }
 
-function onImgClick(img, elImg) {
-  // update gImg
-  gImgs.selectedImgId = img.id
+function showMemeEditor() {
   // hide gallery & info section
   document.querySelector('.gallery').classList.add('hide-gallery')
   document.querySelector('.info').style.display = 'none'
-  // show the meme editor
   document.querySelector('.meme-editor').style.display = 'flex'
+  document.querySelector('.meme-editor input[type=text]').value = ''
+}
 
-  //creating the canvas
-  gCanvas = document.querySelector('.meme-editor canvas')
-  gCtx = gCanvas.getContext('2d')
+function onImgClick(img, elImg) {
+  // update gImg
+  gImgs.selectedImgId = img.id
+  // show the meme editor
+  showMemeEditor()
+
+  //setting the canvas height and width
   gCanvas.height = elImg.naturalHeight
   gCanvas.width = elImg.naturalWidth
+
   // Add Canvas Event Listeners
   addCanvasListeners()
+
   // draw the image on the canvas
   gMeme.selectedImgId = img.id
   gMeme.selectedImg = elImg
-  drawCanvas()
+  drawCanvas(undefined, true)
+
   // initilize gCtx
   gCtx.font = '30px Impact'
 }
@@ -273,8 +284,10 @@ function openGallery() {
   document.querySelector('.meme-editor').style.display = 'none'
 }
 
-function showAllTags() {
-  renderInfoSection(true)
+function toggleTags(e) {
+  gIsShowTags = !gIsShowTags
+  e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
+  renderInfoSection(gIsShowTags)
 }
 
 function renderInfoSection(displayAll = false) {
@@ -282,13 +295,13 @@ function renderInfoSection(displayAll = false) {
   var { tags, tagCount } = getTagsForDisplay()
   var i = 10
   if (displayAll) i = tagCount - 1
-  while (i) {
-    var strHTML = ``
-    for (var tag in tags) {
-      strHTML += `<li style="font-size:${tags[tag] * 4}">${tag}</li>`
-      i--
-      if (i === 0) break
-    }
+  // while (i) {
+  var strHTML = ``
+  for (var tag in tags) {
+    strHTML += `<li style="font-size:${tags[tag] * 4}">${tag}</li>`
+    i--
+    if (i === 0) break
   }
+  // }
   document.querySelector('.tags ul').innerHTML = strHTML
 }

@@ -70,10 +70,10 @@ function getTagsForDisplay() {
   gTagCount = 0
   gImgs.forEach((img) => {
     img.keywords.forEach((keyword) => {
-      if (!gKeywordSearchCountMap[keyword]) gKeywordSearchCountMap[keyword] = 1
+      if (gKeywordSearchCountMap[keyword]) gKeywordSearchCountMap[keyword]++
       else {
         gTagCount++
-        gKeywordSearchCountMap[keyword]++
+        gKeywordSearchCountMap[keyword] = 1
       }
     })
   })
