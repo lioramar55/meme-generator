@@ -1,0 +1,7 @@
+.meme-editor {
+  display: none;
+}
+
+.meme-editor canvas {
+  outline: 2px solid var(--clr-secondary);
+}
