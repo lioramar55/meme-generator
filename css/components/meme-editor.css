@@ -1,7 +1,94 @@
 .meme-editor {
   display: none;
+  text-align: center;
+  padding: 2rem 0;
+  justify-content: space-evenly;
+  height: 100%;
 }
 
 .meme-editor canvas {
   outline: 2px solid var(--clr-secondary);
+}
+
+.meme-editor button {
+  cursor: pointer;
+  border: none;
+  background-color: var(--clr-btn);
+  border-radius: 1.5rem;
+}
+.meme-editor button img {
+  height: 2rem;
+  width: 2rem;
+}
+
+.editor {
+  display: grid;
+  width: 30%;
+  gap: 5%;
+  margin: auto;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr) 2fr 1fr;
+}
+
+.meme-text {
+  height: 2rem;
+  grid-column: 1/-1;
+  grid-row: 1;
+}
+
+.switch {
+  grid-area: 2/2;
+}
+
+.add {
+  grid-area: 2/3;
+}
+
+.trash {
+  grid-area: 2/4;
+}
+
+.increase-font {
+  grid-area: 3/1;
+}
+
+.decrease-font {
+  grid-area: 3/2;
+}
+
+.align-to-left {
+  grid-area: 3/3;
+}
+
+.center-align-text {
+  grid-area: 3/4;
+}
+
+.align-to-right {
+  grid-area: 3/5;
+}
+
+#font {
+  grid-area: 4 / span 3;
+}
+
+.text-stroke {
+  grid-area: 4/4;
+}
+.brush {
+  grid-area: 4/5;
+}
+
+.meme-editor .download {
+  grid-area: 5 / span 3;
+  padding: 1rem;
+  color: #fff;
+  background-color: var(--clr-primary);
+}
+
+.meme-editor .share {
+  grid-area: 5 / 4 / 5 / 6;
+  padding: 1rem;
+  color: #fff;
+  background-color: var(--clr-secondary);
 }

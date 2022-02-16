@@ -74,3 +74,5 @@ var gMeme = {
 function getImagesForDisplay() {
   return gImgs
 }
+
+function getMemesForDisplay() {}

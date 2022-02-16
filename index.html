@@ -22,25 +22,30 @@
         </div>
       </header>
       <main class="main-layout">
-        <section class="info flex justify-between">
-          <div class="search">
-            <h2>Choose a template</h2>
-            <input type="text" placeholder="meme templates" />
-          </div>
-          <div class="tags">
-            <ul class="clean-list flex">
-              <li>tag</li>
-              <li>tag</li>
-              <li>tag</li>
-              <li>tag</li>
-              <li>tag</li>
-            </ul>
-          </div>
-        </section>
+        <section class="info flex justify-between"></section>
         <section class="gallery grid"></section>
         <section class="meme-editor flex">
           <canvas></canvas>
-          <div class="editor"></div>
+          <div class="editor">
+            <input class="meme-text" type="text" placeholder="Enter somthing funny" />
+            <button class="switch"><img src="assets/icons/switch.png" /></button>
+            <button class="add"><img src="assets/icons/add.png" /></button>
+            <button class="trash"><img src="assets/icons/trash.png" /></button>
+            <button class="increase-font"><img src="assets/icons/increase-font.png" /></button>
+            <button class="decrease-font"><img src="assets/icons/decrease-font.png" /></button>
+            <button class="align-to-left"><img src="assets/icons/align-to-left.png" /></button>
+            <button class="center-align-text">
+              <img src="assets/icons/center-text-alignment.png" />
+            </button>
+            <button class="align-to-right"><img src="assets/icons/align-to-right.png" /></button>
+            <select name="font" id="font">
+              <option value="impact">Impact</option>
+            </select>
+            <button class="text-stroke"><img src="assets/icons/text-stroke.png" /></button>
+            <button class="brush"><img src="assets/icons/brush.png" /></button>
+            <button class="download">Download</button>
+            <button class="share">Share</button>
+          </div>
         </section>
         <section class="generator"></section>
       </main>
