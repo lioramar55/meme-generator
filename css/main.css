@@ -13,6 +13,7 @@
 /* COMPONENTS */
 
 @import 'components/header.css';
+@import 'components/info-section.css';
 @import 'components/gallery.css';
 @import 'components/meme-editor.css';
 @import 'components/footer.css';

@@ -1,7 +1,8 @@
 'use strict'
 
 const dataKey = 'memesDB'
-var gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 }
+var gTagCount
+var gKeywordSearchCountMap = {}
 var gImgs = [
   { id: 1, imgURL: 'assets/imgs/meme-imgs-sq/1', keywords: ['funny', 'donald', 'president'] },
   { id: 2, imgURL: 'assets/imgs/meme-imgs-sq/2', keywords: ['dogs', 'cute'] },
@@ -11,7 +12,7 @@ var gImgs = [
     keywords: ['dogs', 'baby', 'cute', 'sleep'],
   },
   { id: 4, imgURL: 'assets/imgs/meme-imgs-sq/4', keywords: ['funny', 'cat', 'sleep'] },
-  { id: 5, imgURL: 'assets/imgs/meme-imgs-sq/5', keywords: ['funny', 'bbay', 'success'] },
+  { id: 5, imgURL: 'assets/imgs/meme-imgs-sq/5', keywords: ['funny', 'baby', 'success'] },
   {
     id: 6,
     imgURL: 'assets/imgs/meme-imgs-sq/6',
@@ -64,3 +65,17 @@ function getImagesForDisplay() {
 }
 
 function getMemesForDisplay() {}
+
+function getTagsForDisplay() {
+  gTagCount = 0
+  gImgs.forEach((img) => {
+    img.keywords.forEach((keyword) => {
+      if (!gKeywordSearchCountMap[keyword]) gKeywordSearchCountMap[keyword] = 1
+      else {
+        gTagCount++
+        gKeywordSearchCountMap[keyword]++
+      }
+    })
+  })
+  return { tags: gKeywordSearchCountMap, tagCount: gTagCount }
+}
