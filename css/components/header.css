@@ -1,0 +1,21 @@
+header {
+  background-color: var(--clr-nav-bg);
+}
+.main-nav {
+  height: calc(10vh + 1rem);
+}
+
+.logo {
+  height: 3rem;
+}
+
+.nav-list a {
+  padding: 1rem;
+}
+
+.nav-list a,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #fff;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meme Generator</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body onload="init()">
+    <header>
+      <div class="main-layout main-nav flex align-center justify-between">
+        <div class="logo"><img src="assets/imgs/LOGO.png" alt="Meme Generator Logo" /></div>
+        <nav>
+          <ul class="nav-list clean-list flex">
+            <li><a href="#" class="nav-item">Gallery</a></li>
+            <li><a href="#" class="nav-item">Memes</a></li>
+            <li><a href="#" class="nav-item">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main class="main-layout">
+      <section class="info flex justify-between">
+        <div class="search">
+          <input type="text" placeholder="Look for a meme" />
+          <button>Search</button>
+        </div>
+        <div class="tags">
+          <ul class="clean-list flex">
+            <li>tag</li>
+            <li>tag</li>
+            <li>tag</li>
+            <li>tag</li>
+            <li>tag</li>
+          </ul>
+        </div>
+      </section>
+      <section class="gallery grid">
+        <img src="assets/imgs/meme-imgs-sq/1.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/2.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/3.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/4.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/5.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/6.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/7.jpg" alt="" />
+        <img src="assets/imgs/meme-imgs-sq/8.jpg" alt="" />
+      </section>
+      <section class="generator"></section>
+    </main>
+    <footer></footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>
