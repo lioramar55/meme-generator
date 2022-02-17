@@ -14,4 +14,4 @@ const memesSentences = [
   'But if we could',
   'JS what is this?',
   'Write hello world , add to cv 7 years experienced',
-];
+]

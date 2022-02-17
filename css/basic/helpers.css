@@ -4,6 +4,15 @@
   list-style-type: none;
 }
 
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  color: #fff;
+  background-color: var(--clr-primary);
+}
+
 .flex {
   display: flex;
 }

@@ -18,13 +18,16 @@ function initCanvas() {
   gCtx = gCanvas.getContext('2d')
 }
 
-function renderMeme(id) {
+function setSelectedImg(elImg) {
+  gSelectedImg = elImg
+}
+
+function renderMeme() {
   var meme = getMeme()
   // draw the image on the canvas
-  meme.selectedImgId = id
   drawCleanCanvas()
   // initilize gCtx
-  gCtx.font = `${meme.lines[0].font}px ${meme.lines[0].font}`
+  gCtx.font = `${meme.lines[0].size}px ${meme.lines[0].font}`
 }
 
 function setCanvasDimensions() {
@@ -66,6 +69,7 @@ function drawCanvas() {
 
   // looping throung each line in meme.lines
   meme.lines.forEach((line, idx) => {
+    console.log('line.txt', line.txt)
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y, 140)

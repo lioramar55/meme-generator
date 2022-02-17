@@ -2,8 +2,6 @@
 
 //Global variables
 
-var gIsShowTags = false
-var gIsMobile = false
 var gDrag = {
   isOn: false,
   startPos: {},
@@ -44,73 +42,15 @@ function addEditorListeners() {
   document.querySelector('.align-to-right').addEventListener('click', onAlignText)
   document.querySelector('.center-align-text').addEventListener('click', onAlignText)
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
-}
-
-// rendering
-
-function renderGallery() {
-  var imgs = getImagesForDisplay()
-  var strHTMLs = imgs.map((img) => {
-    return `<img onclick="onImgClick(${img.id}, this)" src="${img.imgURL}.jpg" />`
-  })
-  document.querySelector('.gallery').innerHTML = strHTMLs.join('')
-}
-
-function openMemes() {
-  // TODO: Render memes page
-  var memes = getMemesForDisplay()
-  if (!memes) return
-}
-
-function openGallery() {
-  // show gallery & info section
-  document.querySelector('.gallery-container').classList.remove('hide-gallery')
-  // hide the meme editor
-  document.querySelector('.meme-editor').style.display = 'none'
-}
-
-function toggleTags(e) {
-  gIsShowTags = !gIsShowTags
-  e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
-  renderInfoSection(gIsShowTags)
-}
-
-function renderInfoSection(displayAll = false) {
-  //Get tags from the meme service
-  var { tags, tagCount } = getTagsForDisplay()
-  var i = 8
-  if (displayAll) i = tagCount - 1
-  // while (i) {
-  var strHTML = ``
-  for (var tag in tags) {
-    strHTML += `<li style="font-size:${tags[tag] * 4}">${tag}</li>`
-    i--
-    if (i === 0) break
-  }
-  // }
-  document.querySelector('.tags ul').innerHTML = strHTML
-}
-
-function toggleMenu() {
-  document.body.classList.toggle('show-menu')
+  document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
 }
 
 // opening the meme editor
 
-function showMemeEditor() {
-  // hide gallery & info section
-  document.querySelector('.gallery-container').classList.add('hide-gallery')
-  document.querySelector('.info').style.display = 'none'
-  document.querySelector('.meme-editor').style.display = 'flex'
-  // reseting values and focus on the text input
-  document.querySelector('.meme-editor input[type=text]').value = ''
-  document.querySelector('.meme-editor input[type=text]').focus()
-}
-
-function onImgClick(id, elImg) {
-  // update gSelectedImg
-
-  gSelectedImg = elImg
+function onImgClick(e, elImg) {
+  if (e) resetMeme()
+  // update the selected image
+  setSelectedImg(elImg)
   // show the meme editor
   showMemeEditor()
 
@@ -120,7 +60,16 @@ function onImgClick(id, elImg) {
   //setting the canvas height and width
   setCanvasDimensions()
 
-  renderMeme(id)
+  renderMeme()
+}
+
+function showMemeEditor() {
+  // hide gallery & info section
+  document.querySelector('.gallery-container').classList.add('hide-gallery')
+  document.querySelector('.meme-editor').style.display = 'flex'
+  // reseting values and focus on the text input
+  document.querySelector('.meme-editor input[type=text]').value = ''
+  document.querySelector('.meme-editor input[type=text]').focus()
 }
 
 // Drag Lines
@@ -213,24 +162,39 @@ function onSwitchLine() {
 
 function onAddLine() {
   document.querySelector('.meme-editor input[type=text]').value = ''
-  var meme = getMeme()
-  var { height } = getCanvasDimension()
-  var y = meme.lines.length === 1 ? height - 100 : height / 2
-  var newLine = {
-    txt: '',
-    size: 30,
-    align: 'left',
-    color: 'black',
-    font: 'Impact',
-    stroke: false,
-    x: 100,
-    y,
-  }
+
   document.querySelector('.meme-editor input[type=text]').focus()
   addNewLine(newLine)
 }
 
 function onSetColor(e) {
   setMemeColor(e.target.value)
+  drawCanvas()
+}
+
+// rendering
+
+function openMemes() {
+  // TODO: Render memes page
+  var memes = getMemesForDisplay()
+  if (!memes) return
+}
+
+function toggleMenu() {
+  document.body.classList.toggle('show-menu')
+}
+
+function onSearchTag(e, elTag) {
+  e.stopPropagation()
+  var keyword = elTag.innerText
+  renderGallery(keyword)
+  updateSearchCount(keyword)
+  renderInfoSection()
+}
+
+function onFlexibleClick() {
+  var meme = getFlexibleMeme()
+  var elImg = getImgByMemeId(meme.selectedImgId)
+  onImgClick(undefined, elImg)
   drawCanvas()
 }

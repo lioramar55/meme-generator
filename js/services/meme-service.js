@@ -110,7 +110,7 @@ var gMeme = {
       color: '#111',
       font: 'Impact',
       x: 100,
-      y: 100,
+      y: 75,
     },
   ],
 }
@@ -143,6 +143,38 @@ function getMeme() {
   return gMeme
 }
 
+function getFlexibleMeme() {
+  var idx
+  idx = rand(0, memesSentences.length - 1)
+  gMeme.selectedImgId = idx
+  idx = rand(0, memesSentences.length - 1)
+  gMeme.lines[0].txt = memesSentences[idx]
+  var isTwoLines = Math.random > 0.5 ? true : false
+  if (isTwoLines) {
+    idx = rand(0, memesSentences.length - 1)
+    var newLine = {
+      txt: memesSentences[idx],
+      size: 30,
+      stroke: false,
+      align: 'left',
+      color: '#111',
+      font: 'Impact',
+      x: 100,
+      y: 75,
+    }
+    gMeme.lines.push(newLine)
+  }
+  return gMeme
+}
+
+function getImgByMemeId() {
+  var id = gMeme.selectedImgId
+  var img = gImgs.find((img) => img.id === id)
+  var elImg = new Image()
+  elImg.src = img.imgURL + '.jpg'
+  return elImg
+}
+
 function getMemesForDisplay() {}
 
 // CHECK Functions
@@ -161,7 +193,29 @@ function isHoveringLine(x, y) {
   return isLineSelected ? selectedLine : -1
 }
 
+// function is
+
 // SET Functions
+
+function resetMeme() {
+  if (!gMeme.selectedImgId) return
+  gMeme = {
+    selectedImgId: null,
+    selectedLineIdx: 0,
+    lines: [
+      {
+        txt: '',
+        size: 30,
+        stroke: false,
+        align: 'left',
+        color: '#111',
+        font: 'Impact',
+        x: 100,
+        y: 75,
+      },
+    ],
+  }
+}
 
 function setMemeColor(color) {
   gMeme.lines[gMeme.selectedLineIdx].color = color
@@ -172,6 +226,18 @@ function toggleTextStroke() {
 }
 
 function addNewLine(newLine) {
+  var { height } = getCanvasDimension()
+  var y = gMeme.lines.length === 1 ? height - 50 : height / 2
+  var newLine = {
+    txt: '',
+    size: 30,
+    align: 'left',
+    color: 'black',
+    font: 'Impact',
+    stroke: false,
+    x: 100,
+    y,
+  }
   gMeme.selectedLineIdx++
   gMeme.lines.push(newLine)
 }
@@ -198,4 +264,8 @@ function deleteLine() {
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
     gMeme.selectedLineIdx = 0
   }
+}
+
+function updateSearchCount(keyword) {
+  gKeywordSearchCountMap[keyword]++
 }
