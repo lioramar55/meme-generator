@@ -59,6 +59,7 @@ function onImgClick(id, elImg) {
 
   renderMeme()
   renderDummyText()
+  selectLine()
 }
 
 function showMemeEditor() {
@@ -84,8 +85,10 @@ function renderStickers(idx) {
 
 function openMemes() {
   // TODO: Render memes page
-  var memes = getMemesForDisplay()
-  if (!memes) return
+  toggleNotification()
+  var memeImgs = getMemesForDisplay()
+  if (!memeImgs) return
+  renderMemes(memeImgs)
 }
 
 function toggleMenu() {

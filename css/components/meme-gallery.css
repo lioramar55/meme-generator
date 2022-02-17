@@ -1,0 +1,26 @@
+.memes-gallery {
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+  transition: opacity 0.2s ease-in;
+}
+
+.memes-gallery {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.memes-gallery img {
+  cursor: pointer;
+}
+
+.memes-gallery img:hover {
+  outline: 8px solid var(--clr-img-hover);
+}
+
+.memes-gallery.show-memes {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.2s ease-out;
+}

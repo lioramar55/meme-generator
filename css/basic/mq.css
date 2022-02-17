@@ -12,6 +12,18 @@
     justify-content: space-around;
     padding: 1rem 0;
   }
+
+  .info {
+    padding: 2rem 0;
+  }
+
+  .search {
+    gap: 2rem;
+  }
+
+  .tags {
+    gap: 2rem;
+  }
 }
 
 @media (max-width: 920px) {
@@ -48,5 +60,17 @@
 
   .meme-editor {
     flex-direction: column;
+  }
+
+  .info {
+    padding: 0.5rem 0;
+  }
+
+  .search {
+    gap: 0.5rem;
+  }
+
+  .tags {
+    gap: 0.5rem;
   }
 }

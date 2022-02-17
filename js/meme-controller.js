@@ -45,7 +45,11 @@ function setCanvasDimensions() {
     height = aspectRatio * width
   }
   // Check if the user is in mobile
-  // if(windowWidth < )
+  if (windowWidth < 880) {
+    width = 360
+    height = aspectRatio * width
+  }
+
   gCanvas.height = height
   gCanvas.width = width
 }
@@ -86,9 +90,7 @@ function drawCanvas() {
 function renderDummyText() {
   var str = memesSentences[rand(0, memesSentences.length - 1)]
   var meme = getMeme()
-  // var text = meme.lines[0].txt
   var textWidth = gCtx.measureText(str).width
-  console.log('textWidth >= gCanvas.width', textWidth, gCanvas.width)
   if (textWidth >= gCanvas.width) {
     var fontSize = (25 * gCanvas.width) / textWidth
     setLineFontSize(fontSize)
@@ -122,7 +124,12 @@ function drawCleanCanvas() {
 
 function onSaveMeme() {
   var dataURL = gCanvas.toDataURL('image/jpeg')
-  saveToStorage(dataURL)
+  saveMeme(dataURL)
+  toggleNotification()
+}
+
+function toggleNotification() {
+  document.querySelector('.memes-link').classList.add('notification')
 }
 
 function onAddSticker(elSticker) {
@@ -233,9 +240,6 @@ function onSelectLine(selectedLine) {
 }
 
 function selectLine() {
-  // var txt = gCtx.measureText(currLine.txt)
-  // var lineHeight = txt.actualBoundingBoxAscent
-  // Setting text box outline settings
   var currLine = getCurrentLine()
   var rectWidth = gCanvas.width - 40
   gCtx.strokeStyle = currLine.stroke ? '#f0f0f0' : '#111'
@@ -261,7 +265,8 @@ function alignTextTo(alignTo) {
 }
 
 function printOnCanvs(txt, x, y) {
-  gCtx.fillText(txt, x, y)
+  gCtx.fillText(txt, x, y, gCanvas.width)
+  // gCtx.strokeText(txt, x, y, gCanvas.width)
 }
 
 function onCanvasClick(e) {

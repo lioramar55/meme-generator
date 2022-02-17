@@ -115,6 +115,8 @@ var gMeme = {
   ],
 }
 
+var gMemes = []
+
 // GET Functions
 
 function getImagesForDisplay() {
@@ -179,11 +181,14 @@ function getMemeImg() {
   return elImg
 }
 
-function getFromStorage() {
+function getMemesFromStroage() {
   loadFromStorage(dataKey)
 }
 
-function getMemesForDisplay() {}
+function getMemesForDisplay() {
+  var memes = loadFromStorage(dataKey)
+  return memes
+}
 
 // CHECK Functions
 
@@ -204,7 +209,7 @@ function isHoveringLine(x, y) {
 // SET Functions
 
 function setLineFontSize(fontSize) {
-  gMeme.lines[selectedLineIdx].font = `${fontSize}px Impact`
+  gMeme.lines[gMeme.selectedLineIdx].font = `${fontSize}px Impact`
 }
 
 function setLineText(text) {
@@ -212,7 +217,8 @@ function setLineText(text) {
 }
 
 function saveMeme(val) {
-  saveToStorage(dataKey, val)
+  gMemes.push(val)
+  saveToStorage(dataKey, gMemes)
 }
 
 function setSelectedImg(id) {

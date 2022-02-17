@@ -34,6 +34,12 @@ a:active {
   text-decoration: none;
 }
 
+/* Notification */
+
+.nav-list a.notification::after {
+  content: '*';
+}
+
 /* NAV BURGER */
 .nav-burger {
   border: none;

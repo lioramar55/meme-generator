@@ -1,5 +1,4 @@
 .info {
-  padding: 2rem 0;
   gap: 2rem;
   text-align: center;
 }
@@ -7,7 +6,6 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  gap: 2rem;
   flex-basis: 50%;
 }
 
@@ -17,13 +15,11 @@
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .tags ul {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(2rem, 1fr));
-  gap: 2rem;
 }
 
 .tags ul li {

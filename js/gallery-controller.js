@@ -10,6 +10,16 @@ function renderGallery(isFilter) {
   document.querySelector('.gallery').innerHTML = strHTMLs.join('')
 }
 
+function renderMemes(memeImgs) {
+  var strHTMLs = memeImgs.map((img) => `<img src="${img}.jpg" />`)
+  showMemesGallery()
+  document.querySelector('.memes-gallery').innerHTML = strHTMLs.join('')
+}
+
+function showMemesGallery() {
+  document.querySelector('.memes-gallery').classList.add('show-memes')
+}
+
 function renderInfoSection(displayAll = false) {
   //Get tags from the meme service
   var { tags, tagCount } = getTagsForDisplay()
@@ -36,6 +46,7 @@ function openGallery() {
   // hide the meme editor
   document.querySelector('.meme-editor').style.display = 'none'
   renderGallery()
+  resetMeme()
 }
 
 function onTagClick(e, elTag) {
