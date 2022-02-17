@@ -28,7 +28,10 @@
           <section class="info  flex justify-between">
             <div class="search">
               <h2>Choose a template</h2>
-              <input type="search" placeholder="meme templates" />
+              <!-- <input type="search" placeholder="meme templates" /> -->
+              <input  list="data-lists" id="data-list" name="data">
+                <datalist id="data-lists">
+                </datalist>
               <button class="btn flexible">Flexible</button>
             </div>
             <div class="tags">
@@ -79,6 +82,7 @@
     <!-- <script src="lib/hammer.min.js"></script> -->
     <script src="js/utils/utils.js"></script>
     <script src="js/utils/memesSentences.js"></script>
+    <script src="js/services/storage-service.js"></script>
     <script src="js/services/i18n-service.js"></script>
     <script src="js/services/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>

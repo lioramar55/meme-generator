@@ -167,7 +167,11 @@ function getFlexibleMeme() {
   return gMeme
 }
 
-function getImgByMemeId() {
+function getMemeImgId() {
+  return gMeme.selectedImgId
+}
+
+function getMemeImg() {
   var id = gMeme.selectedImgId
   var img = gImgs.find((img) => img.id === id)
   var elImg = new Image()
@@ -196,6 +200,10 @@ function isHoveringLine(x, y) {
 // function is
 
 // SET Functions
+
+function setSelectedImg(id) {
+  gMeme.selectedImgId = id
+}
 
 function resetMeme() {
   if (!gMeme.selectedImgId) return
