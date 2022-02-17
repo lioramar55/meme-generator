@@ -1,5 +1,7 @@
 'use strict'
 
+//Global variables
+
 var gCanvas
 var gCtx
 var gIsShowTags = false
@@ -10,6 +12,8 @@ var gDrag = {
   startPos: {},
 }
 
+// INITIALIZTION
+
 function init() {
   addEventListeners()
   renderInfoSection()
@@ -17,6 +21,8 @@ function init() {
   gCanvas = document.querySelector('.meme-editor canvas')
   gCtx = gCanvas.getContext('2d')
 }
+
+// Adding Event Listeners
 
 function addEventListeners() {
   document.querySelector('.gallery-link').addEventListener('click', openGallery)
@@ -34,11 +40,11 @@ function addEditorListeners() {
   document.querySelector('.switch').addEventListener('click', onSwitchLine)
   document.querySelector('.text-stroke').addEventListener('click', onTextStroke)
   document.querySelector('.trash').addEventListener('click', onDeleteLine)
-  document.querySelector('.increase-font').addEventListener('click', changeFontSize)
-  document.querySelector('.decrease-font').addEventListener('click', changeFontSize)
-  document.querySelector('.align-to-left').addEventListener('click', alignText)
-  document.querySelector('.align-to-right').addEventListener('click', alignText)
-  document.querySelector('.center-align-text').addEventListener('click', alignText)
+  document.querySelector('.increase-font').addEventListener('click', onChangeFontSize)
+  document.querySelector('.decrease-font').addEventListener('click', onChangeFontSize)
+  document.querySelector('.align-to-left').addEventListener('click', onAlignText)
+  document.querySelector('.align-to-right').addEventListener('click', onAlignText)
+  document.querySelector('.center-align-text').addEventListener('click', onAlignText)
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
 }
 
@@ -49,12 +55,117 @@ function addCanvasListeners() {
   gCanvas.addEventListener('mouseup', stopDrag)
 }
 
+// rendering
+
+function renderGallery() {
+  var imgs = getImagesForDisplay()
+  var strHTMLs = imgs.map((img) => {
+    return `<img onclick="onImgClick(${img.id}, this)" src="${img.imgURL}.jpg" />`
+  })
+  document.querySelector('.gallery').innerHTML = strHTMLs.join('')
+}
+
+function openMemes() {
+  // TODO: Render memes page
+  var memes = getMemesForDisplay()
+  if (!memes) return
+}
+
+function openGallery() {
+  // show gallery & info section
+  document.querySelector('.gallery').classList.remove('hide-gallery')
+  document.querySelector('.info').style.display = 'flex'
+  // hide the meme editor
+  document.querySelector('.meme-editor').style.display = 'none'
+}
+
+function toggleTags(e) {
+  gIsShowTags = !gIsShowTags
+  e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
+  renderInfoSection(gIsShowTags)
+}
+
+function renderInfoSection(displayAll = false) {
+  //Get tags from the meme service
+  var { tags, tagCount } = getTagsForDisplay()
+  var i = 10
+  if (displayAll) i = tagCount - 1
+  // while (i) {
+  var strHTML = ``
+  for (var tag in tags) {
+    strHTML += `<li style="font-size:${tags[tag] * 4}">${tag}</li>`
+    i--
+    if (i === 0) break
+  }
+  // }
+  document.querySelector('.tags ul').innerHTML = strHTML
+}
+
+// opening the meme editor
+
+function showMemeEditor() {
+  // hide gallery & info section
+  document.querySelector('.gallery').classList.add('hide-gallery')
+  document.querySelector('.info').style.display = 'none'
+  document.querySelector('.meme-editor').style.display = 'flex'
+  // reseting values and focus on the text input
+  document.querySelector('.meme-editor input[type=text]').value = ''
+  document.querySelector('.meme-editor input[type=text]').focus()
+}
+
+function onImgClick(id, elImg) {
+  // update gSelectedImg
+
+  gSelectedImg = elImg
+  // show the meme editor
+  showMemeEditor()
+
+  //setting the canvas height and width
+  setCanvasDimensions()
+
+  // Add Canvas Event Listeners
+  addCanvasListeners()
+
+  //Initilize the canvas
+  initCanvas(id)
+}
+
 // Canvas Functions
+
+function setCanvasDimensions() {
+  var height = gSelectedImg.naturalHeight
+  var width = gSelectedImg.naturalWidth
+  var windowWidth = window.innerWidth
+  var aspectRatio = height / width
+  // Check if the user is in mobile
+  if (width > windowWidth / 2) {
+    width = width * 0.75
+    height = aspectRatio * width
+  } else if (windowWidth > width * 2) {
+    width = 500
+    height = aspectRatio * width
+  }
+  gCanvas.height = height
+  gCanvas.width = width
+}
 
 function drawCanvas(e, isCleanCanvas = false) {
   var meme = getMeme()
   // checking if there is a current image
-  if (meme.selectedImgId) gCtx.drawImage(gSelectedImg, 0, 0)
+  if (meme.selectedImgId)
+    // drawing the image in the same dimension like original
+    gCtx.drawImage(
+      gSelectedImg,
+      0,
+      0,
+      gSelectedImg.width,
+      gSelectedImg.height, // source image
+      0,
+      0,
+      gCanvas.width,
+      gCanvas.height
+    )
+
   if (isCleanCanvas) return
 
   // TODO: is mobile
@@ -91,6 +202,15 @@ function onCanvasDownload() {
   elLink.href = dataURL
   elLink.download = 'My-Meme.jpg'
   elLink.click()
+}
+
+function initCanvas(id) {
+  var meme = getMeme()
+  // draw the image on the canvas
+  meme.selectedImgId = id
+  drawCanvas(undefined, true)
+  // initilize gCtx
+  gCtx.font = `${meme.lines[0].font}px ${meme.lines[0].font}`
 }
 
 // Drag Lines
@@ -146,7 +266,7 @@ function onTextStroke(e) {
   drawCanvas()
 }
 
-function alignText(e) {
+function onAlignText(e) {
   var elClassList = e.path[1].classList
   var alignTo
   if (elClassList.contains('align-to-left')) alignTo = 'left'
@@ -171,38 +291,21 @@ function alignText(e) {
   onSelectLine()
 }
 
-function changeFontSize(e) {
-  var isIncrease = e.path[1].classList.contains('increase-font')
-  if (isIncrease) gMeme.lines[gMeme.selectedLineIdx].size++
-  else gMeme.lines[gMeme.selectedLineIdx].size--
+function onChangeFontSize(e) {
+  var isPlus = e.path[1].classList.contains('increase-font')
+  changeFontSize(isPlus)
   drawCanvas()
   onSelectLine()
 }
 
 function onDeleteLine() {
   document.querySelector('.meme-editor input[type=text]').value = ''
-  if (gMeme.lines.length === 1) {
-    gMeme.lines = [
-      {
-        txt: '',
-        size: 30,
-        align: 'left',
-        color: 'black',
-        font: 'Impact',
-        x: 100,
-        y: 100 + gMeme.lines[gMeme.selectedLineIdx].y,
-      },
-    ]
-  } else {
-    var idx = gMeme.selectedLineIdx
-    gMeme.lines.splice(idx, 1)
-    gMeme.selectedLineIdx = 0
-  }
+  deleteLine()
   drawCanvas()
 }
 
 function onUserType(e) {
-  var currLine = gMeme.lines[gMeme.selectedLineIdx]
+  var currLine = getCurrentLine()
   currLine.txt = e.target.value
   drawCanvas()
   onSelectLine()
@@ -239,95 +342,4 @@ function onAddLine() {
 function onSetColor(e) {
   setMemeColor(e.target.value)
   drawCanvas()
-}
-
-function renderGallery() {
-  var imgs = getImagesForDisplay()
-  var strHTMLs = imgs.map((img) => {
-    return `<img onclick="onImgClick(${img.id}, this)" src="${img.imgURL}.jpg" />`
-  })
-  document.querySelector('.gallery').innerHTML = strHTMLs.join('')
-}
-
-function showMemeEditor() {
-  // hide gallery & info section
-  document.querySelector('.gallery').classList.add('hide-gallery')
-  document.querySelector('.info').style.display = 'none'
-  document.querySelector('.meme-editor').style.display = 'flex'
-  // reseting values and focus on the text input
-  document.querySelector('.meme-editor input[type=text]').value = ''
-  document.querySelector('.meme-editor input[type=text]').focus()
-}
-
-function onImgClick(id, elImg) {
-  // update gSelectedImg
-
-  gSelectedImg = elImg
-  // show the meme editor
-  showMemeEditor()
-
-  //setting the canvas height and width
-  setCanvasDimensions()
-
-  // Add Canvas Event Listeners
-  addCanvasListeners()
-
-  //Initilize the canvas
-  initCanvas(id)
-}
-
-function initCanvas(id) {
-  var meme = getMeme()
-  // draw the image on the canvas
-  meme.selectedImgId = id
-  drawCanvas(undefined, true)
-  // initilize gCtx
-  gCtx.font = `${meme.lines[0].font}px ${meme.lines[0].font}`
-}
-
-function setCanvasDimensions() {
-  var height = gSelectedImg.naturalHeight
-  var width = gSelectedImg.naturalWidth
-  var aspectRatio = Math.min(height / width, width / height)
-  // Check if the user is in mobile
-  width = aspectRatio * width * 0.75
-
-  gCanvas.height = height
-  gCanvas.width = width
-}
-
-function openMemes() {
-  // TODO: Render memes page
-  var memes = getMemesForDisplay()
-  if (!memes) return
-}
-
-function openGallery() {
-  // show gallery & info section
-  document.querySelector('.gallery').classList.remove('hide-gallery')
-  document.querySelector('.info').style.display = 'flex'
-  // hide the meme editor
-  document.querySelector('.meme-editor').style.display = 'none'
-}
-
-function toggleTags(e) {
-  gIsShowTags = !gIsShowTags
-  e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
-  renderInfoSection(gIsShowTags)
-}
-
-function renderInfoSection(displayAll = false) {
-  //Get tags from the meme service
-  var { tags, tagCount } = getTagsForDisplay()
-  var i = 10
-  if (displayAll) i = tagCount - 1
-  // while (i) {
-  var strHTML = ``
-  for (var tag in tags) {
-    strHTML += `<li style="font-size:${tags[tag] * 4}">${tag}</li>`
-    i--
-    if (i === 0) break
-  }
-  // }
-  document.querySelector('.tags ul').innerHTML = strHTML
 }
