@@ -2,10 +2,15 @@
   display: none;
   text-align: center;
   padding: 2rem 0;
+  gap: 1rem;
   justify-content: space-evenly;
   height: 100%;
+  align-items: center;
 }
 
+.canvas-container {
+  width: 100%;
+}
 .meme-editor canvas {
   outline: 2px solid var(--clr-secondary);
 }
@@ -36,9 +41,10 @@ a:hover {
 
 .editor {
   display: grid;
-  width: 30%;
-  gap: 5%;
+  width: 20rem;
+  height: 20rem;
   margin: auto;
+  gap: 1rem;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr) 2fr 1fr;
 }

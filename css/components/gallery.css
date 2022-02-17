@@ -2,7 +2,6 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 0.5rem;
   opacity: 1;
-  /* height: 100%; */
   pointer-events: all;
   transition: opacity 0.2s ease-in;
 }
