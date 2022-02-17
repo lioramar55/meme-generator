@@ -18,8 +18,7 @@ function renderInfoSection(displayAll = false) {
   var tagListHTML = ``
   var dataListHTML = ``
   for (var tag in tags) {
-    var fontSize = tags[tag] < 3 ? 10 : tags[tag] * 1.125
-    console.log('tags[tag]', tag, tags[tag])
+    var fontSize = tags[tag] < 8 ? 8 : tags[tag] * 1.125
     tagListHTML += `<li onclick="onTagClick(event, this)" style="font-size:${fontSize}px">${tag}</li>`
     i--
     if (i === 0) break
@@ -37,6 +36,28 @@ function openGallery() {
   // hide the meme editor
   document.querySelector('.meme-editor').style.display = 'none'
   renderGallery()
+}
+
+function onTagClick(e, elTag) {
+  e.stopPropagation()
+  var searchTerm = elTag.innerText
+  renderGallery(searchTerm)
+  updateSearchCount(searchTerm)
+  renderInfoSection()
+}
+
+function onFlexibleClick() {
+  var meme = getFlexibleMeme()
+  var elImg = getMemeImg(meme.selectedImgId)
+  onImgClick(meme.selectedImgId, elImg)
+  drawCanvas()
+}
+
+function onUserSearch(e) {
+  var searchTerm = e.target.value
+  renderGallery(searchTerm)
+  updateSearchCount(searchTerm)
+  renderInfoSection()
 }
 
 function toggleTags(e) {

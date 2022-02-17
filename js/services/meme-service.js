@@ -203,6 +203,14 @@ function isHoveringLine(x, y) {
 
 // SET Functions
 
+function setLineFontSize(fontSize) {
+  gMeme.lines[selectedLineIdx].font = `${fontSize}px Impact`
+}
+
+function setLineText(text) {
+  gMeme.lines[gMeme.selectedLineIdx].txt = text
+}
+
 function saveMeme(val) {
   saveToStorage(dataKey, val)
 }
@@ -239,7 +247,7 @@ function toggleTextStroke() {
   gMeme.lines[gMeme.selectedLineIdx].stroke = !gMeme.lines[gMeme.selectedLineIdx].stroke
 }
 
-function addNewLine(newLine) {
+function addNewLine() {
   var { height } = getCanvasDimension()
   var y = gMeme.lines.length === 1 ? height - 50 : height / 2
   var newLine = {

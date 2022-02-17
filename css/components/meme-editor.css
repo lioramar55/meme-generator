@@ -46,7 +46,7 @@ a:hover {
   margin: auto;
   gap: 1rem;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr) 2fr 1fr;
+  grid-template-rows: repeat(6, 1fr) 2fr 1fr;
 }
 
 .meme-text {
@@ -109,20 +109,43 @@ label[for='color'] {
   opacity: 0;
 }
 
-.save-meme {
+.stickers-container {
+  grid-area: 5 / 2 / 5 / 5;
+}
+
+.stickers-left {
   grid-area: 5/1;
 }
 
+.stickers-right {
+  grid-area: 5/5;
+}
+
+.save-meme {
+  grid-area: 6/1;
+}
+
 .meme-editor .download {
-  grid-area: 5 / 2/5/4;
+  grid-area: 6 / 2/6/4;
   padding: 1rem;
   color: #fff;
   background-color: var(--clr-primary);
 }
 
 .meme-editor .share {
-  grid-area: 5 / 4 / 5 / 6;
+  grid-area: 6 / 4 / 6 / 6;
   padding: 1rem;
   color: #fff;
   background-color: var(--clr-primary);
+}
+
+.stickers-container {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.5rem;
+}
+
+.stickers-container > * {
+  align-self: center;
+  cursor: pointer;
 }

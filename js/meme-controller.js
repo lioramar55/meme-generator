@@ -83,8 +83,24 @@ function drawCanvas() {
   })
 }
 
+function renderDummyText() {
+  var str = memesSentences[rand(0, memesSentences.length - 1)]
+  var meme = getMeme()
+  // var text = meme.lines[0].txt
+  var textWidth = gCtx.measureText(str).width
+  console.log('textWidth >= gCanvas.width', textWidth, gCanvas.width)
+  if (textWidth >= gCanvas.width) {
+    var fontSize = (25 * gCanvas.width) / textWidth
+    setLineFontSize(fontSize)
+    gCtx.font = `${fontSize}px Impact`
+  }
+  gCtx.fillText(str, meme.lines[0].x, meme.lines[0].y)
+  setLineText(str)
+}
+
 function drawCleanCanvas() {
   const img = getMemeImg()
+  var alignTo = getMeme().lines[0].align
   // drawing the image in the same dimension like original
   gCtx.drawImage(
     img,
@@ -97,6 +113,7 @@ function drawCleanCanvas() {
     gCanvas.width,
     gCanvas.height
   )
+  alignTextTo(alignTo)
 }
 
 //  =====================
@@ -106,6 +123,13 @@ function drawCleanCanvas() {
 function onSaveMeme() {
   var dataURL = gCanvas.toDataURL('image/jpeg')
   saveToStorage(dataURL)
+}
+
+function onAddSticker(elSticker) {
+  addNewLine()
+  var text = elSticker.innerText
+  setLineText(text)
+  drawCanvas()
 }
 
 function onTextStroke() {
@@ -138,8 +162,8 @@ function onDeleteLine() {
 }
 
 function onUserType(e) {
+  setLineText(e.target.value)
   var currLine = getCurrentLine()
-  currLine.txt = e.target.value
   drawCanvas()
   onSelectLine()
   printOnCanvs(currLine.txt, currLine.x, currLine.y)
@@ -158,7 +182,7 @@ function onAddLine() {
   document.querySelector('.meme-editor input[type=text]').value = ''
 
   document.querySelector('.meme-editor input[type=text]').focus()
-  addNewLine(newLine)
+  addNewLine()
 }
 
 function onSetColor(e) {

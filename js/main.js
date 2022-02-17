@@ -1,6 +1,7 @@
 'use strict'
 
 //Global variables
+var gStickers = ['🐸', '💣', '💎', '💥', '💦', '💨']
 
 // INITIALIZTION
 
@@ -45,7 +46,6 @@ function addEditorListeners() {
 // opening the meme editor
 
 function onImgClick(id, elImg) {
-  if (id) resetMeme()
   // update the selected image
   setSelectedImg(id)
   // show the meme editor
@@ -58,6 +58,7 @@ function onImgClick(id, elImg) {
   setCanvasDimensions()
 
   renderMeme()
+  renderDummyText()
 }
 
 function showMemeEditor() {
@@ -67,6 +68,18 @@ function showMemeEditor() {
   // reseting values and focus on the text input
   document.querySelector('.meme-editor input[type=text]').value = ''
   document.querySelector('.meme-editor input[type=text]').focus()
+
+  //render stickers
+  renderStickers()
+}
+
+function renderStickers(idx) {
+  var i = idx ? idx : 0
+  var strHTML = ``
+  for (var i = 0; i < gStickers.length; i++) {
+    strHTML += `<span onclick="onAddSticker(this)">${gStickers[i]}</span>`
+  }
+  document.querySelector('.stickers-container').innerHTML = strHTML
 }
 
 function openMemes() {
@@ -77,26 +90,4 @@ function openMemes() {
 
 function toggleMenu() {
   document.body.classList.toggle('show-menu')
-}
-
-function onTagClick(e, elTag) {
-  e.stopPropagation()
-  var searchTerm = elTag.innerText
-  renderGallery(searchTerm)
-  updateSearchCount(searchTerm)
-  renderInfoSection()
-}
-
-function onFlexibleClick() {
-  var meme = getFlexibleMeme()
-  var elImg = getMemeImg(meme.selectedImgId)
-  onImgClick(meme.selectedImgId, elImg)
-  drawCanvas()
-}
-
-function onUserSearch(e) {
-  var searchTerm = e.target.value
-  renderGallery(searchTerm)
-  updateSearchCount(searchTerm)
-  renderInfoSection()
 }
