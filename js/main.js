@@ -64,8 +64,7 @@ function openMemes() {
 
 function openGallery() {
   // show gallery & info section
-  document.querySelector('.gallery').classList.remove('hide-gallery')
-  document.querySelector('.info').style.display = 'flex'
+  document.querySelector('.gallery-container').classList.remove('hide-gallery')
   // hide the meme editor
   document.querySelector('.meme-editor').style.display = 'none'
 }
@@ -79,7 +78,7 @@ function toggleTags(e) {
 function renderInfoSection(displayAll = false) {
   //Get tags from the meme service
   var { tags, tagCount } = getTagsForDisplay()
-  var i = 10
+  var i = 8
   if (displayAll) i = tagCount - 1
   // while (i) {
   var strHTML = ``
@@ -100,7 +99,7 @@ function toggleMenu() {
 
 function showMemeEditor() {
   // hide gallery & info section
-  document.querySelector('.gallery').classList.add('hide-gallery')
+  document.querySelector('.gallery-container').classList.add('hide-gallery')
   document.querySelector('.info').style.display = 'none'
   document.querySelector('.meme-editor').style.display = 'flex'
   // reseting values and focus on the text input

@@ -4,7 +4,11 @@ const dataKey = 'memesDB'
 var gTagCount
 var gKeywordSearchCountMap = {}
 var gImgs = [
-  { id: 1, imgURL: 'assets/imgs/meme-imgs-vr/1', keywords: ['funny', 'donald', 'president'] },
+  {
+    id: 1,
+    imgURL: 'assets/imgs/meme-imgs-vr/1',
+    keywords: ['funny', 'trump', 'donald', 'president'],
+  },
   { id: 2, imgURL: 'assets/imgs/meme-imgs-vr/2', keywords: ['dogs', 'cute'] },
   {
     id: 3,
@@ -57,6 +61,41 @@ var gImgs = [
     id: 18,
     imgURL: 'assets/imgs/meme-imgs-vr/18',
     keywords: ['toy story', 'buzz', 'buzz oldrin', 'explaining'],
+  },
+  {
+    id: 19,
+    imgURL: 'assets/imgs/meme-imgs-vr/19',
+    keywords: ['finally free', 'free'],
+  },
+  {
+    id: 20,
+    imgURL: 'assets/imgs/meme-imgs-vr/20',
+    keywords: ['funny', 'trump', 'donald', 'president'],
+  },
+  {
+    id: 21,
+    imgURL: 'assets/imgs/meme-imgs-vr/21',
+    keywords: ['what are you doing', 'wtf'],
+  },
+  {
+    id: 22,
+    imgURL: 'assets/imgs/meme-imgs-vr/22',
+    keywords: ['evil', 'sarcasm', 'pretending'],
+  },
+  {
+    id: 23,
+    imgURL: 'assets/imgs/meme-imgs-vr/23',
+    keywords: ['africans kid dancing', 'funny kids', 'kids'],
+  },
+  {
+    id: 24,
+    imgURL: 'assets/imgs/meme-imgs-vr/24',
+    keywords: ['dog', 'cute', 'funny'],
+  },
+  {
+    id: 25,
+    imgURL: 'assets/imgs/meme-imgs-vr/25',
+    keywords: ['fixed it', 'thank god', 'success'],
   },
 ]
 var gMeme = {

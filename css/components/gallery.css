@@ -1,9 +1,12 @@
-.gallery {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.5rem;
+.gallery-container {
   opacity: 1;
   pointer-events: all;
   transition: opacity 0.2s ease-in;
+}
+
+.gallery {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
 }
 
 .gallery img {
@@ -11,7 +14,7 @@
 }
 
 .gallery img:hover {
-  outline: 4px solid var(--clr-img-hover);
+  outline: 8px solid var(--clr-img-hover);
 }
 
 .hide-gallery {

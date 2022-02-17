@@ -1,4 +1,29 @@
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 8fr 1fr;
+  grid-auto-flow: column;
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+}
+
 .main-layout {
-  max-width: 90vw;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+header {
+  grid-area: header;
+}
+
+main {
+  grid-area: main;
+  padding: 1rem 0;
+}
+
+.footer {
+  grid-area: footer;
 }

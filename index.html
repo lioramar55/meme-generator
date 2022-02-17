@@ -11,7 +11,7 @@
     <div class="main-screen"></div>
     <div class="container">
       <header>
-        <div class="main-layout main-nav flex align-center justify-between">
+        <div class="main-layout main-nav flex">
           <div class="logo"><img src="assets/imgs/LOGO.png" alt="Meme Generator Logo" /></div>
           <nav>
             <ul class="nav-list clean-list flex">
@@ -23,18 +23,24 @@
           </nav>
         </div>
       </header>
+
       <main class="main-layout">
-        <section class="info flex justify-between">
-          <div class="search">
-            <h2>Choose a template</h2>
-            <input type="text" placeholder="meme templates" />
-          </div>
-          <div class="tags">
-            <ul class="clean-list"></ul>
-            <button>Show More</button>
-          </div>
-        </section>
-        <section class="gallery grid"></section>
+        <div class="main-layout gallery-container">
+          <section class="info  flex justify-between">
+            <div class="search">
+              <h2>Choose a template</h2>
+              <input type="search" placeholder="meme templates" />
+              <button class="flexible">Flexible</button>
+            </div>
+            <div class="tags">
+              <ul class="clean-list"></ul>
+              <button>Show More</button>
+            </div>
+          </section>
+
+          </section>
+          <section class="gallery grid"></section>
+        </div>
         <section class="meme-editor flex">
           <div class="canvas-container">
             <canvas></canvas>
@@ -65,7 +71,11 @@
         </section>
         <section class="generator"></section>
       </main>
-      <footer><h4>Meme-Generator by Lior R Amar</h4></footer>
+      <footer>
+        <div class="main-layout">
+          <h4>Meme-Generator by Lior R Amar</h4>
+        </div>
+      </footer>
     </div>
     <script src="js/memesSentences.js"></script>
     <!-- <script src="lib/hammer.min.js"></script> -->

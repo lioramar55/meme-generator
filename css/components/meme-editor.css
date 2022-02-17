@@ -120,5 +120,5 @@ label[for='color'] {
   grid-area: 5 / 4 / 5 / 6;
   padding: 1rem;
   color: #fff;
-  background-color: var(--clr-secondary);
+  background-color: var(--clr-primary);
 }

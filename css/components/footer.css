@@ -1,5 +1,8 @@
 footer {
   background: var(--clr-pumpkin-orange);
   text-align: center;
-  height: 100%;
+}
+
+footer div {
+  height: 10vh;
 }

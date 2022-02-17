@@ -1,13 +1,24 @@
+/* Main Header */
 header {
   background-color: var(--clr-pumpkin-orange);
 }
+
+/* Main Nav */
 .main-nav {
-  height: calc(10vh + 1rem);
+  /* height: calc(10vh + 1rem); */
+  align-items: center;
+  justify-content: space-around;
+  padding: 1rem 0;
 }
+
+/* Logo */
 
 .logo {
   height: 3rem;
+  cursor: pointer;
 }
+
+/* Nav Links */
 
 .nav-list a {
   padding: 1rem;
@@ -20,15 +31,20 @@ a:active {
   color: #fff;
 }
 
+.nav-list a:hover {
+  color: var(--clr-primary);
+  font-weight: bold;
+}
+
 /* NAV BURGER */
 .nav-burger {
   border: none;
   background-color: transparent;
-  color: white;
+  color: var(--clr-primary);
   font-size: 2rem;
   cursor: pointer;
 }
 
 .nav-burger:hover {
-  color: var(--clr4);
+  color: #fff;
 }
