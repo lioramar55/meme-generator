@@ -21,9 +21,14 @@ header {
 
 main {
   grid-area: main;
-  padding: 1rem 0;
 }
 
-.footer {
+footer {
   grid-area: footer;
+}
+
+footer div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

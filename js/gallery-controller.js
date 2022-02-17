@@ -18,7 +18,8 @@ function renderInfoSection(displayAll = false) {
   var tagListHTML = ``
   var dataListHTML = ``
   for (var tag in tags) {
-    var fontSize = tags[tag] / 2 + 10
+    var fontSize = tags[tag] < 3 ? 10 : tags[tag] * 1.125
+    console.log('tags[tag]', tag, tags[tag])
     tagListHTML += `<li onclick="onTagClick(event, this)" style="font-size:${fontSize}px">${tag}</li>`
     i--
     if (i === 0) break

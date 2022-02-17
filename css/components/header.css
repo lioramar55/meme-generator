@@ -7,8 +7,6 @@ header {
 .main-nav {
   /* height: calc(10vh + 1rem); */
   align-items: center;
-  justify-content: space-around;
-  padding: 1rem 0;
 }
 
 /* Logo */
@@ -25,15 +23,15 @@ header {
 }
 
 .nav-list a,
-a:hover,
 a:active {
   text-decoration: none;
   color: #fff;
 }
 
 .nav-list a:hover {
-  color: var(--clr-primary);
+  color: var(--clr-secondary);
   font-weight: bold;
+  text-decoration: none;
 }
 
 /* NAV BURGER */

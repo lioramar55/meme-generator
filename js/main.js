@@ -37,6 +37,7 @@ function addEditorListeners() {
   document.querySelector('.align-to-left').addEventListener('click', onAlignText)
   document.querySelector('.align-to-right').addEventListener('click', onAlignText)
   document.querySelector('.center-align-text').addEventListener('click', onAlignText)
+  document.querySelector('.save-meme').addEventListener('click', onSaveMeme)
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
   document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
 }

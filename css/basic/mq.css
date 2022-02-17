@@ -8,9 +8,16 @@
   .nav-burger {
     display: none;
   }
+  .main-nav {
+    justify-content: space-around;
+    padding: 1rem 0;
+  }
 }
 
 @media (max-width: 920px) {
+  .main-layout {
+    padding: 0 1rem;
+  }
   .nav-list {
     position: fixed;
     flex-direction: column;
@@ -27,6 +34,11 @@
   body.show-menu .nav-list {
     transform: rotateX(0);
     opacity: 1;
+  }
+
+  .main-nav {
+    justify-content: space-between;
+    padding: 1rem;
   }
 
   .nav-list li {

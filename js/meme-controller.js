@@ -103,6 +103,11 @@ function drawCleanCanvas() {
 //       Editor Functions
 // ====================
 
+function onSaveMeme() {
+  var dataURL = gCanvas.toDataURL('image/jpeg')
+  saveToStorage(dataURL)
+}
+
 function onTextStroke() {
   toggleTextStroke()
   drawCanvas()

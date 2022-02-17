@@ -109,8 +109,12 @@ label[for='color'] {
   opacity: 0;
 }
 
+.save-meme {
+  grid-area: 5/1;
+}
+
 .meme-editor .download {
-  grid-area: 5 / span 3;
+  grid-area: 5 / 2/5/4;
   padding: 1rem;
   color: #fff;
   background-color: var(--clr-primary);

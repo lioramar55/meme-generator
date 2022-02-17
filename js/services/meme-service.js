@@ -179,6 +179,10 @@ function getMemeImg() {
   return elImg
 }
 
+function getFromStorage() {
+  loadFromStorage(dataKey)
+}
+
 function getMemesForDisplay() {}
 
 // CHECK Functions
@@ -197,9 +201,11 @@ function isHoveringLine(x, y) {
   return isLineSelected ? selectedLine : -1
 }
 
-// function is
-
 // SET Functions
+
+function saveMeme(val) {
+  saveToStorage(dataKey, val)
+}
 
 function setSelectedImg(id) {
   gMeme.selectedImgId = id
