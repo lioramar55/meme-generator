@@ -5,6 +5,7 @@ var gCtx
 var gDrag = {
   isOn: false,
   startPos: {},
+  line: -1,
 }
 
 // Canvas Functions
@@ -135,7 +136,10 @@ function onSetFont(e) {
   drawCanvas()
 }
 
-function onShareCanvas() {}
+//TODO
+function onShareCanvas() {
+  document.querySelector('.share').classList.add('show-links')
+}
 
 function onSaveMeme() {
   var dataURL = gCanvas.toDataURL('image/jpeg')
@@ -216,6 +220,80 @@ function onSetColor(e) {
 //      Canvas logic
 // ====================
 
+// Touch events
+
+function getTouchCoords(e, x, y) {
+  var rect = gCanvas.getBoundingClientRect()
+  const touch = e.touches[0]
+  x = touch.clientX - rect.left
+  y = touch.clientY - rect.top
+  return { x, y }
+}
+
+function touchStart(e) {
+  e.preventDefault()
+  const { x, y } = getTouchCoords(e)
+  gDrag.line = isTouchingLine(x, y)
+  if (gDrag.line !== -1) {
+    onSelectLine(gDrag.line)
+    gDrag.isOn = true
+    gDrag.startPos = { x, y }
+  } else {
+    drawCanvas()
+  }
+}
+
+function touchMove(e) {
+  if (!gDrag.isOn) return
+  const { x, y } = getTouchCoords(e)
+  const dx = x - gDrag.startPos.x
+  const dy = y - gDrag.startPos.y
+  moveLineTo(dx, dy)
+  gDrag.startPos = { x, y }
+  drawCanvas()
+  onSelectLine(gDrag.line)
+}
+
+function touchEnd() {
+  gDrag.isOn = false
+  gDrag.line = -1
+}
+
+// Mouse Events
+
+function startDrag(e) {
+  const x = e.offsetX
+  const y = e.offsetY
+
+  gDrag.line = isTouchingLine(x, y)
+  if (gDrag.line !== -1) {
+    gDrag.isOn = true
+    gDrag.startPos = { x, y }
+  }
+}
+
+function moveLine(e) {
+  if (!gDrag.isOn) return
+  document.body.style.cursor = 'grabbing'
+  const x = e.offsetX
+  const y = e.offsetY
+  if (gDrag.line !== -1) {
+    var dx = x - gDrag.startPos.x
+    var dy = y - gDrag.startPos.y
+    moveLineTo(dx, dy)
+    gDrag.startPos = { x, y }
+  }
+  drawCanvas()
+}
+
+function stopDrag() {
+  gDrag.isOn = false
+  gDrag.line = -1
+  document.body.style.cursor = 'default'
+}
+
+// Inline Editing
+
 function onKeyPress(e) {
   var selectedLine = gMeme.lines[gMeme.selectedLineIdx]
   if (selectedLine === -1) return
@@ -230,69 +308,6 @@ function onKeyPress(e) {
   setLineText(str)
   drawCanvas()
   selectLine()
-}
-
-function touchStart(e) {
-  e.preventDefault()
-  const touch = e.touches[0]
-  var rect = gCanvas.getBoundingClientRect()
-  const x = touch.clientX - rect.left
-  const y = touch.clientY - rect.top
-  var selectedLine = isTouchingLine(x, y)
-  if (selectedLine !== -1) {
-    onSelectLine(selectedLine)
-    gDrag.isOn = true
-    gDrag.startPos = { x, y }
-  } else {
-    drawCanvas()
-  }
-}
-
-function touchMove(e) {
-  if (!gDrag.isOn) return
-  const touch = e.touches[0]
-  const rect = gCanvas.getBoundingClientRect()
-  const selectedLine = getCurrentLine()
-  const x = touch.clientX - rect.left
-  const y = touch.clientY - rect.top
-  const dx = x - gDrag.startPos.x
-  const dy = y - gDrag.startPos.y
-  moveLineTo(dx, dy)
-  gDrag.startPos = { x, y }
-  drawCanvas()
-  onSelectLine(selectedLine)
-}
-function touchEnd() {
-  gDrag.isOn = false
-}
-
-function startDrag(e) {
-  const x = e.offsetX
-  const y = e.offsetY
-
-  document.body.style.cursor = 'grabbing'
-  gDrag.isOn = true
-  gDrag.startPos = { x, y }
-}
-
-function moveLine(e) {
-  const x = e.offsetX
-  const y = e.offsetY
-  if (isTouchingLine(x, y) !== -1) document.body.style.cursor = 'grab'
-  else document.body.style.cursor = 'default'
-  if (!gDrag.isOn) return
-  var selectedLine = isTouchingLine(x, y)
-  if (selectedLine !== -1) {
-    var dx = x - gDrag.startPos.x
-    var dy = y - gDrag.startPos.y
-    moveLineTo(dx, dy)
-    gDrag.startPos = { x, y }
-  }
-  drawCanvas()
-}
-
-function stopDrag() {
-  gDrag.isOn = false
 }
 
 function onSelectLine(selectedLine) {
