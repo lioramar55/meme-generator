@@ -67,6 +67,8 @@ function onImgClick(id) {
 function showMemeEditor() {
   // hide gallery & info section
   document.querySelector('.gallery-container').classList.add('hide-gallery')
+  document.querySelector('.memes-gallery').classList.add('hide-memes')
+  document.querySelector('.memes-gallery').style.display = 'none'
   document.querySelector('.meme-editor').style.display = 'flex'
   // reseting values and focus on the text input
   document.querySelector('.meme-editor input[type=text]').value = ''
@@ -90,6 +92,8 @@ function openMemes() {
   var elMemesGallery = document.querySelector('.memes-gallery')
   document.querySelector('.memes-gallery').classList.remove('hide-memes')
   document.querySelector('.meme-editor').style.display = 'none'
+  document.querySelector('.memes-gallery').style.display = 'grid'
+
   document.querySelector('.gallery-container').classList.add('hide-gallery')
   if (!memes || !memes.length) elMemesGallery.innerHTML = `<h2>You don't have any saved memes</h2>`
   else {
