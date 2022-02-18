@@ -20,7 +20,6 @@ function renderMeme() {
   const memeTxt = meme.lines[meme.selectedLineIdx].txt
   // draw the image on the canvas
   // initilize gCtx
-  gCtx.font = `${meme.lines[0].size}px ${meme.lines[0].font}`
   drawCleanCanvas()
   drawCanvas()
   // Writing the meme txt in the input
@@ -94,7 +93,7 @@ function drawCanvas() {
 
 function drawLines(meme, align) {
   meme.lines.forEach((line, idx) => {
-    gCtx.font = line.size + 'px' + ' ' + line.font
+    gCtx.font = `${line.size}px ${line.font}`
     gCtx.fillStyle = line.color
     if (line.txt) {
       if (meme.lines[idx].stroke) {
@@ -125,6 +124,11 @@ function drawCleanCanvas() {
 //  =====================
 //       Editor Functions
 // ====================
+
+function onSetFont(e) {
+  setLineFont(e.target.value)
+  drawCanvas()
+}
 
 function onSaveMeme() {
   var dataURL = gCanvas.toDataURL('image/jpeg')

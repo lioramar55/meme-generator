@@ -216,8 +216,12 @@ function moveLineTo(x, y) {
   gMeme.lines[gMeme.selectedLineIdx].y += y
 }
 
-function setLineFontSize(fontSize) {
-  gMeme.lines[gMeme.selectedLineIdx].font = `${fontSize}px Impact`
+function setLineFont(font) {
+  gMeme.lines[gMeme.selectedLineIdx].font = font
+}
+
+function setLineFontSize(size) {
+  gMeme.lines[gMeme.selectedLineIdx].size = size
 }
 
 function setLineText(text) {

@@ -29,6 +29,7 @@ function addEditorListeners() {
   document.querySelector('.meme-editor input[type=text]').addEventListener('focus', onSelectLine)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focusout', drawCanvas)
   document.querySelector('.meme-editor input[type=color]').addEventListener('input', onSetColor)
+  document.querySelector('.meme-editor select').addEventListener('change', onSetFont)
   document.querySelector('.add').addEventListener('click', onAddLine)
   document.querySelector('.switch').addEventListener('click', onSwitchLine)
   document.querySelector('.text-stroke').addEventListener('click', onTextStroke)
