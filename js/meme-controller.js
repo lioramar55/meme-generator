@@ -89,12 +89,12 @@ function drawCanvas() {
     gCanvas.width,
     gCanvas.height
   )
-  // looping throung each line in meme.lines
   drawLines(meme)
 }
 
 function drawLines(meme, align) {
   meme.lines.forEach((line, idx) => {
+    gCtx.fillStyle = line.color
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y, 140)
@@ -102,7 +102,6 @@ function drawLines(meme, align) {
     }
     if (align) alignTextTo(line.align)
     gCtx.font = line.size + 'px' + ' ' + line.font
-    gCtx.fillStyle = line.color
   })
 }
 
@@ -179,7 +178,6 @@ function onUserType(e) {
   setLineText(e.target.value)
   drawCanvas()
   onSelectLine()
-  printOnCanvs(currLine.txt, currLine.x, currLine.y)
 }
 
 function onSwitchLine() {
@@ -253,12 +251,10 @@ function touchEnd() {
 function startDrag(e) {
   const x = e.offsetX
   const y = e.offsetY
-  // var selectedLine = isTouchingLine(x, y)
-  // if (selectedLine !== -1) {
+
   document.body.style.cursor = 'grabbing'
   gDrag.isOn = true
   gDrag.startPos = { x, y }
-  // }
 }
 
 function moveLine(e) {
@@ -295,6 +291,10 @@ function selectLine() {
   gCtx.strokeStyle = currLine.stroke ? '#f0f0f0' : '#111'
   gCtx.lineWidth = 3
   gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
+  gCtx.globalAlpha = 0.15
+  gCtx.fillStyle = 'black'
+  gCtx.fillRect(21, currLine.y - 49, rectWidth - 1, 79)
+  gCtx.globalAlpha = 1.0
 }
 
 function alignTextTo(alignTo) {
@@ -312,11 +312,6 @@ function alignTextTo(alignTo) {
       currLine.x = gCanvas.width / 2 - gCtx.measureText(currLine.txt).width / 2
       break
   }
-}
-
-function printOnCanvs(txt, x, y) {
-  gCtx.fillText(txt, x, y, gCanvas.width)
-  // gCtx.strokeText(txt, x, y, gCanvas.width)
 }
 
 function onCanvasClick(e) {
