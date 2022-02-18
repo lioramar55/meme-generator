@@ -1,6 +1,9 @@
 'use strict'
 var gIsShowTags = false
 
+// Rendering
+
+// Gallery
 function renderGallery(isFilter) {
   var imgs = getImagesForDisplay()
   if (isFilter) imgs = imgs.filter((img) => img.keywords.includes(isFilter))
@@ -10,16 +13,7 @@ function renderGallery(isFilter) {
   document.querySelector('.gallery').innerHTML = strHTMLs.join('')
 }
 
-function renderMemes(memeImgs) {
-  var strHTMLs = memeImgs.map((img) => `<img src="${img}.jpg" />`)
-  showMemesGallery()
-  document.querySelector('.memes-gallery').innerHTML = strHTMLs.join('')
-}
-
-function showMemesGallery() {
-  document.querySelector('.memes-gallery').classList.add('show-memes')
-}
-
+// Info section
 function renderInfoSection(displayAll = false) {
   //Get tags from the meme service
   var { tags, tagCount } = getTagsForDisplay()
@@ -40,9 +34,27 @@ function renderInfoSection(displayAll = false) {
   document.querySelector('.tags ul').innerHTML = tagListHTML
 }
 
+//Memes
+
+function renderMemes(memeImgs) {
+  var strHTMLs = memeImgs.map((img) => {
+    var elImg = new Image()
+    elImg.src = img
+    elImg.onload = () => {
+      strHTMLs += elImg
+      document.querySelector('.memes-gallery').appendChild(elImg)
+    }
+  })
+  // document.querySelector('.memes-gallery').innerHTML = strHTMLs.join('')
+}
+
+// Show and hide sections
+
 function openGallery() {
   // show gallery & info section
   document.querySelector('.gallery-container').classList.remove('hide-gallery')
+  document.querySelector('.memes-gallery').classList.add('hide-memes')
+
   // hide the meme editor
   document.querySelector('.meme-editor').style.display = 'none'
   renderGallery()

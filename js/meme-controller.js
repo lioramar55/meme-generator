@@ -124,9 +124,15 @@ function drawImageOnCanvas(img) {
   )
 }
 
-//  =====================
+// storing meme
+
+function onSaveMeme() {
+  var dataURL = gCanvas.toDataURL('image/jpeg')
+  saveMemeToStorage(dataURL)
+  toggleNotification()
+}
+
 //       Editor Functions
-// ====================
 
 function onSetFont(e) {
   setLineFont(e.target.value)
@@ -152,14 +158,8 @@ function onUploadImg(e) {
   }
 }
 
-function onSaveMeme() {
-  var dataURL = gCanvas.toDataURL('image/jpeg')
-  saveMeme(dataURL)
-  toggleNotification()
-}
-
 function toggleNotification() {
-  document.querySelector('.memes-link').classList.add('notification')
+  document.querySelector('.memes-link').classList.toggle('notification')
 }
 
 function onAddSticker(elSticker) {

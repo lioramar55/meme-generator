@@ -117,6 +117,17 @@ var gMeme = {
 
 var gMemes = []
 
+// Storage
+
+function saveMemeToStorage(val) {
+  gMemes.push(val)
+  saveToStorage(dataKey, gMemes)
+}
+
+function getMemesFromStroage() {
+  loadFromStorage(dataKey)
+}
+
 // GET Functions
 
 function getImagesForDisplay() {
@@ -181,10 +192,6 @@ function getMemeImg() {
   return elImg
 }
 
-function getMemesFromStroage() {
-  loadFromStorage(dataKey)
-}
-
 function getMemesForDisplay() {
   var memes = loadFromStorage(dataKey)
   return memes
@@ -224,11 +231,6 @@ function setLineFontSize(size) {
 
 function setLineText(text) {
   if (gMeme.selectedLineIdx !== -1) gMeme.lines[gMeme.selectedLineIdx].txt = text
-}
-
-function saveMeme(val) {
-  gMemes.push(val)
-  saveToStorage(dataKey, gMemes)
 }
 
 function setSelectedImg(id) {

@@ -86,11 +86,16 @@ function renderStickers(idx) {
 }
 
 function openMemes() {
-  // TODO: Render memes page
-  toggleNotification()
-  var memeImgs = getMemesForDisplay()
-  if (!memeImgs) return
-  renderMemes(memeImgs)
+  var memes = getMemesForDisplay()
+  var elMemesGallery = document.querySelector('.memes-gallery')
+  document.querySelector('.memes-gallery').classList.remove('hide-memes')
+  document.querySelector('.meme-editor').style.display = 'none'
+  document.querySelector('.gallery-container').classList.add('hide-gallery')
+  if (!memes || !memes.length) elMemesGallery.innerHTML = `<h2>You don't have any saved memes</h2>`
+  else {
+    renderMemes(memes)
+    toggleNotification()
+  }
 }
 
 function toggleMenu() {
