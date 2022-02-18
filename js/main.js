@@ -53,12 +53,12 @@ function onImgClick(id, elImg) {
 
   // Add Canvas Event Listeners
   addCanvasListeners()
+  addTouchListeners()
 
   //setting the canvas height and width
   setCanvasDimensions()
 
   renderMeme()
-  renderDummyText()
   selectLine()
 }
 

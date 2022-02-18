@@ -103,7 +103,7 @@ var gMeme = {
   selectedLineIdx: 0,
   lines: [
     {
-      txt: '',
+      txt: 'Enter something funny',
       size: 30,
       stroke: false,
       align: 'left',
@@ -146,6 +146,8 @@ function getMeme() {
 }
 
 function getFlexibleMeme() {
+  renderDummyText()
+
   var idx
   idx = rand(0, memesSentences.length - 1)
   gMeme.selectedImgId = idx
@@ -192,7 +194,7 @@ function getMemesForDisplay() {
 
 // CHECK Functions
 
-function isHoveringLine(x, y) {
+function isTouchingLine(x, y) {
   let isLineSelected = false
   let selectedLine
   gMeme.lines.forEach((line, idx) => {
@@ -203,10 +205,17 @@ function isHoveringLine(x, y) {
       selectedLine = idx
     }
   })
+  if (isLineSelected) gMeme.selectedLineIdx = selectedLine
+  else gMeme.selectedLineIdx = -1
   return isLineSelected ? selectedLine : -1
 }
 
 // SET Functions
+
+function moveLineTo(x, y) {
+  gMeme.lines[gMeme.selectedLineIdx].x += x
+  gMeme.lines[gMeme.selectedLineIdx].y += y
+}
 
 function setLineFontSize(fontSize) {
   gMeme.lines[gMeme.selectedLineIdx].font = `${fontSize}px Impact`
@@ -232,7 +241,7 @@ function resetMeme() {
     selectedLineIdx: 0,
     lines: [
       {
-        txt: '',
+        txt: 'Enter something funny',
         size: 30,
         stroke: false,
         align: 'left',
