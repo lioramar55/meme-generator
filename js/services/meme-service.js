@@ -206,7 +206,6 @@ function isTouchingLine(x, y) {
     }
   })
   if (isLineSelected) gMeme.selectedLineIdx = selectedLine
-  else gMeme.selectedLineIdx = -1
   return isLineSelected ? selectedLine : -1
 }
 
@@ -222,7 +221,7 @@ function setLineFontSize(fontSize) {
 }
 
 function setLineText(text) {
-  gMeme.lines[gMeme.selectedLineIdx].txt = text
+  if (gMeme.selectedLineIdx !== -1) gMeme.lines[gMeme.selectedLineIdx].txt = text
 }
 
 function saveMeme(val) {

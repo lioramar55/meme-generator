@@ -19,11 +19,10 @@ function renderMeme() {
   const meme = getMeme()
   const memeTxt = meme.lines[meme.selectedLineIdx].txt
   // draw the image on the canvas
-  // drawCleanCanvas()
   // initilize gCtx
   gCtx.font = `${meme.lines[0].size}px ${meme.lines[0].font}`
+  drawCleanCanvas()
   drawCanvas()
-
   // Writing the meme txt in the input
   document.querySelector('.editor input[type=text]').value = memeTxt
 }
@@ -91,34 +90,24 @@ function drawCanvas() {
     gCanvas.height
   )
   // looping throung each line in meme.lines
+  drawLines(meme)
+}
+
+function drawLines(meme, align) {
   meme.lines.forEach((line, idx) => {
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y, 140)
       } else gCtx.fillText(line.txt, line.x, line.y)
     }
+    if (align) alignTextTo(line.align)
     gCtx.font = line.size + 'px' + ' ' + line.font
-    alignTextTo(line.align)
     gCtx.fillStyle = line.color
   })
 }
 
-// function renderDummyText() {
-//   var str = memesSentences[rand(0, memesSentences.length - 1)]
-//   var meme = getMeme()
-//   var textWidth = gCtx.measureText(str).width
-//   if (textWidth >= gCanvas.width) {
-//     var fontSize = (25 * gCanvas.width) / textWidth
-//     setLineFontSize(fontSize)
-//     gCtx.font = `${fontSize}px Impact`
-//   }
-//   gCtx.fillText(str, meme.lines[0].x, meme.lines[0].y)
-//   setLineText(str)
-// }
-
 function drawCleanCanvas() {
   const img = getMemeImg()
-  var alignTo = getMeme().lines[0].align
   // drawing the image in the same dimension like original
   gCtx.drawImage(
     img,
@@ -131,7 +120,7 @@ function drawCleanCanvas() {
     gCanvas.width,
     gCanvas.height
   )
-  alignTextTo(alignTo)
+  drawLines(getMeme(), true)
 }
 
 //  =====================
@@ -185,8 +174,9 @@ function onDeleteLine() {
 }
 
 function onUserType(e) {
-  setLineText(e.target.value)
   var currLine = getCurrentLine()
+  if (currLine === -1 || !currLine) return
+  setLineText(e.target.value)
   drawCanvas()
   onSelectLine()
   printOnCanvs(currLine.txt, currLine.x, currLine.y)
@@ -222,16 +212,15 @@ function onKeyPress(e) {
   if (selectedLine === -1) return
   var elInput = document.querySelector('.editor input[type=text]')
   var str = selectedLine.txt
-  var allowedChars = ''
   if (e.key === 'Backspace') {
     str = str.slice(0, str.length - 1)
   } else if (e.key.length === 1) {
     str = str + e.key
   }
   elInput.value = str
-  selectLine()
   setLineText(str)
   drawCanvas()
+  selectLine()
 }
 
 function touchStart(e) {
@@ -251,14 +240,10 @@ function touchMove(e) {
   const touch = e.touches[0]
   const x = touch.clientX
   const y = touch.clientY
-  // var selectedLine = isTouchingLine(x, y)
-  // console.log('selectLine', selectedLine)
-  // if (selectedLine !== -1) {
   var dx = x - gDrag.startPos.x
   var dy = y - gDrag.startPos.y
   moveLineTo(dx, dy)
   gDrag.startPos = { x, y }
-  // }
   drawCanvas()
 }
 function touchEnd() {
