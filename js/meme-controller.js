@@ -51,16 +51,16 @@ function setCanvasDimensions() {
   var width = img.naturalWidth
   const windowWidth = window.innerWidth
   const aspectRatio = height / width
-  if (width > windowWidth / 2) {
+
+  // Check the user device
+  if (windowWidth > 880) {
     width = width * 0.75
     height = aspectRatio * width
-  } else if (windowWidth > width * 2) {
-    width = 500
+  } else if (windowWidth < 880 && windowWidth > 660) {
+    width = 550
     height = aspectRatio * width
-  }
-  // Check if the user is in mobile
-  if (windowWidth < 880) {
-    width = 360
+  } else if (windowWidth < 660) {
+    width = windowWidth - 50
     height = aspectRatio * width
   }
 
@@ -94,6 +94,7 @@ function drawCanvas() {
 
 function drawLines(meme, align) {
   meme.lines.forEach((line, idx) => {
+    gCtx.font = line.size + 'px' + ' ' + line.font
     gCtx.fillStyle = line.color
     if (line.txt) {
       if (meme.lines[idx].stroke) {
@@ -101,7 +102,6 @@ function drawLines(meme, align) {
       } else gCtx.fillText(line.txt, line.x, line.y)
     }
     if (align) alignTextTo(line.align)
-    gCtx.font = line.size + 'px' + ' ' + line.font
   })
 }
 
@@ -224,25 +224,32 @@ function onKeyPress(e) {
 function touchStart(e) {
   e.preventDefault()
   const touch = e.touches[0]
-  const x = touch.clientX
-  const y = touch.clientY
+  var rect = gCanvas.getBoundingClientRect()
+  const x = touch.clientX - rect.left
+  const y = touch.clientY - rect.top
   var selectedLine = isTouchingLine(x, y)
   if (selectedLine !== -1) {
+    onSelectLine(selectedLine)
     gDrag.isOn = true
     gDrag.startPos = { x, y }
+  } else {
+    drawCanvas()
   }
 }
 
 function touchMove(e) {
   if (!gDrag.isOn) return
   const touch = e.touches[0]
-  const x = touch.clientX
-  const y = touch.clientY
-  var dx = x - gDrag.startPos.x
-  var dy = y - gDrag.startPos.y
+  const rect = gCanvas.getBoundingClientRect()
+  const selectedLine = getCurrentLine()
+  const x = touch.clientX - rect.left
+  const y = touch.clientY - rect.top
+  const dx = x - gDrag.startPos.x
+  const dy = y - gDrag.startPos.y
   moveLineTo(dx, dy)
   gDrag.startPos = { x, y }
   drawCanvas()
+  onSelectLine(selectedLine)
 }
 function touchEnd() {
   gDrag.isOn = false
