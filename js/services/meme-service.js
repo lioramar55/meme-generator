@@ -146,8 +146,6 @@ function getMeme() {
 }
 
 function getFlexibleMeme() {
-  renderDummyText()
-
   var idx
   idx = rand(0, memesSentences.length - 1)
   gMeme.selectedImgId = idx

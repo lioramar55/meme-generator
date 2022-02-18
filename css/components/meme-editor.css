@@ -1,7 +1,7 @@
 .meme-editor {
   display: none;
   text-align: center;
-  padding: 2rem 0;
+  padding: 4rem 0;
   gap: 1rem;
   justify-content: space-evenly;
   height: 100%;
@@ -127,14 +127,13 @@ label[for='color'] {
 
 .meme-editor .download {
   grid-area: 6 / 2/6/4;
-  padding: 1rem;
+
   color: #fff;
   background-color: var(--clr-primary);
 }
 
 .meme-editor .share {
   grid-area: 6 / 4 / 6 / 6;
-  padding: 1rem;
   color: #fff;
   background-color: var(--clr-primary);
 }
@@ -147,5 +146,28 @@ label[for='color'] {
 
 .stickers-container > * {
   align-self: center;
+  cursor: pointer;
+}
+
+.share {
+  position: relative;
+}
+
+.share-links {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  gap: 0.5rem;
+  transform: translateY(40%);
+  transition: opacity 0.2 ease;
+}
+
+.share-links.show-links {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.share-links a {
   cursor: pointer;
 }

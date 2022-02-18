@@ -22,12 +22,6 @@ header {
   padding: 1rem;
 }
 
-.nav-list a,
-a:active {
-  text-decoration: none;
-  color: #fff;
-}
-
 .nav-list a:hover {
   color: var(--clr-secondary);
   font-weight: bold;

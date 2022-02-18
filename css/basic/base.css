@@ -11,6 +11,12 @@ body {
   background-color: var(--clr-secondary);
 }
 
+a,
+a:active {
+  text-decoration: none;
+  color: #fff;
+}
+
 h1,
 h2,
 h3,

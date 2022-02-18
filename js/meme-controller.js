@@ -53,8 +53,13 @@ function setCanvasDimensions() {
 
   // Check the user device
   if (windowWidth > 880) {
-    width = width * 0.75
-    height = aspectRatio * width
+    if (windowWidth > width * 2) {
+      width = width * 1.5
+      height = aspectRatio * width
+    } else {
+      width = width * 0.75
+      height = aspectRatio * width
+    }
   } else if (windowWidth < 880 && windowWidth > 660) {
     width = 550
     height = aspectRatio * width
@@ -97,7 +102,7 @@ function drawLines(meme, align) {
     gCtx.fillStyle = line.color
     if (line.txt) {
       if (meme.lines[idx].stroke) {
-        gCtx.strokeText(line.txt, line.x, line.y, 140)
+        gCtx.strokeText(line.txt, line.x, line.y)
       } else gCtx.fillText(line.txt, line.x, line.y)
     }
     if (align) alignTextTo(line.align)
@@ -129,6 +134,8 @@ function onSetFont(e) {
   setLineFont(e.target.value)
   drawCanvas()
 }
+
+function onShareCanvas() {}
 
 function onSaveMeme() {
   var dataURL = gCanvas.toDataURL('image/jpeg')

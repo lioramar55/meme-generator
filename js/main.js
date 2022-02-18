@@ -41,6 +41,7 @@ function addEditorListeners() {
   document.querySelector('.center-align-text').addEventListener('click', onAlignText)
   document.querySelector('.save-meme').addEventListener('click', onSaveMeme)
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
+  document.querySelector('.share').addEventListener('click', onShareCanvas)
   document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
 }
 
