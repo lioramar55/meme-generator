@@ -10,6 +10,7 @@
 
 .canvas-container {
   width: 100%;
+  flex-basis: 50%;
 }
 .meme-editor canvas {
   outline: 2px solid var(--clr-secondary);
@@ -132,12 +133,22 @@ label[for='color'] {
   background-color: var(--clr-primary);
 }
 
-.meme-editor .share {
+/* .meme-editor .share {
   grid-area: 6 / 4 / 6 / 6;
   color: #fff;
   background-color: var(--clr-primary);
+} */
+
+#upload {
+  display: none;
 }
 
+label[for='upload'] {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
 .stickers-container {
   display: flex;
   justify-content: space-around;
@@ -147,25 +158,6 @@ label[for='color'] {
 .stickers-container > * {
   align-self: center;
   cursor: pointer;
-}
-
-.share {
-  position: relative;
-}
-
-.share-links {
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  display: flex;
-  gap: 0.5rem;
-  transform: translateY(40%);
-  transition: opacity 0.2 ease;
-}
-
-.share-links.show-links {
-  opacity: 1;
-  pointer-events: all;
 }
 
 .share-links a {

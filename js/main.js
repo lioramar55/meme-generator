@@ -41,13 +41,13 @@ function addEditorListeners() {
   document.querySelector('.center-align-text').addEventListener('click', onAlignText)
   document.querySelector('.save-meme').addEventListener('click', onSaveMeme)
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
-  document.querySelector('.share').addEventListener('click', onShareCanvas)
   document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
+  document.querySelector('#upload').addEventListener('change', onUploadImg)
 }
 
 // opening the meme editor
 
-function onImgClick(id, elImg) {
+function onImgClick(id) {
   // update the selected image
   setSelectedImg(id)
   // show the meme editor

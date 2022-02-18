@@ -45,8 +45,10 @@ function addTouchListeners() {
 
 // Get and Set canvas dimension
 
-function setCanvasDimensions() {
-  const img = getMemeImg()
+function setCanvasDimensions(image) {
+  let img
+  if (image) img = image
+  else img = getMemeImg()
   var height = img.naturalHeight
   var width = img.naturalWidth
   const windowWidth = window.innerWidth
@@ -55,7 +57,7 @@ function setCanvasDimensions() {
   // Check the user device
   if (windowWidth > 880) {
     if (windowWidth > width * 2) {
-      width = width * 1.5
+      width = width * 1.5 <= 600 ? width : 600
       height = aspectRatio * width
     } else {
       width = width * 0.75
@@ -82,18 +84,7 @@ function getCanvasDimension() {
 function drawCanvas() {
   const meme = getMeme()
   const img = getMemeImg()
-  // drawing the image in the same dimension like original
-  gCtx.drawImage(
-    img,
-    0,
-    0,
-    img.width,
-    img.height, // source image
-    0,
-    0,
-    gCanvas.width,
-    gCanvas.height
-  )
+  drawImageOnCanvas(img)
   drawLines(meme)
 }
 
@@ -112,7 +103,14 @@ function drawLines(meme, align) {
 
 function drawCleanCanvas() {
   const img = getMemeImg()
-  // drawing the image in the same dimension like original
+  drawImageOnCanvas(img)
+  drawLines(getMeme(), true)
+}
+
+function drawImageOnCanvas(img) {
+  gCanvas.width = img.width
+  gCanvas.height = img.height
+  // gCtx.drawImage(elImg, 0, 0)
   gCtx.drawImage(
     img,
     0,
@@ -124,7 +122,6 @@ function drawCleanCanvas() {
     gCanvas.width,
     gCanvas.height
   )
-  drawLines(getMeme(), true)
 }
 
 //  =====================
@@ -139,6 +136,20 @@ function onSetFont(e) {
 //TODO
 function onShareCanvas() {
   document.querySelector('.share').classList.add('show-links')
+}
+
+function onUploadImg(e) {
+  var file = e.target.files[0]
+  var reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onloadend = (e) => {
+    var elImg = new Image()
+    elImg.src = e.target.result
+    elImg.onload = () => {
+      setCanvasDimensions(elImg)
+      drawImageOnCanvas(elImg)
+    }
+  }
 }
 
 function onSaveMeme() {
@@ -273,10 +284,12 @@ function startDrag(e) {
 }
 
 function moveLine(e) {
-  if (!gDrag.isOn) return
-  document.body.style.cursor = 'grabbing'
   const x = e.offsetX
   const y = e.offsetY
+
+  if (!gDrag.isOn) return
+  document.body.style.cursor = 'grabbing'
+
   if (gDrag.line !== -1) {
     var dx = x - gDrag.startPos.x
     var dy = y - gDrag.startPos.y
