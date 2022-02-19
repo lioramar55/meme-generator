@@ -56,6 +56,7 @@ function openGallery() {
   document.querySelector('.gallery-container').classList.remove('hide-gallery')
   document.querySelector('.memes-gallery').classList.add('hide-memes')
   document.querySelector('.memes-gallery').style.display = 'none'
+  document.querySelector('.about').classList.add('hide-about')
 
   // hide the meme editor
   document.querySelector('.meme-editor').style.display = 'none'
