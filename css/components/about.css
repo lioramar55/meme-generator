@@ -1,0 +1,22 @@
+.about {
+  display: flex;
+  text-align: center;
+  gap: 4rem;
+}
+
+.about > * {
+  flex-basis: 50%;
+}
+
+.about img {
+  border-radius: 50%;
+  height: 50%;
+}
+
+.about .text {
+  align-self: center;
+}
+
+.hide-about {
+  display: none;
+}

@@ -17,6 +17,7 @@ function init() {
 function addEventListeners() {
   document.querySelector('.gallery-link').addEventListener('click', openGallery)
   document.querySelector('.memes-link').addEventListener('click', openMemes)
+  document.querySelector('.about-link').addEventListener('click', openAbout)
   document.querySelector('.nav-burger').addEventListener('click', toggleMenu)
   document.querySelector('.main-screen').addEventListener('click', toggleMenu)
   addEditorListeners()
@@ -94,13 +95,20 @@ function openMemes() {
   document.querySelector('.memes-gallery').classList.remove('hide-memes')
   document.querySelector('.meme-editor').style.display = 'none'
   document.querySelector('.memes-gallery').style.display = 'grid'
-
+  document.querySelector('.about').classList.add('hide-about')
   document.querySelector('.gallery-container').classList.add('hide-gallery')
   if (!memes || !memes.length) elMemesGallery.innerHTML = `<h2>You don't have any saved memes</h2>`
   else {
     renderMemes(memes)
     toggleNotification()
   }
+}
+
+function openAbout() {
+  document.querySelector('.meme-editor').style.display = 'none'
+  document.querySelector('.memes-gallery').classList.add('hide-memes')
+  document.querySelector('.gallery-container').classList.add('hide-gallery')
+  document.querySelector('.about').classList.remove('hide-about')
 }
 
 function toggleMenu() {
