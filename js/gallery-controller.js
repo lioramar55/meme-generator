@@ -38,6 +38,7 @@ function renderInfoSection(displayAll = false) {
 
 function renderMemes(memeImgs) {
   var strHTMLs = memeImgs.map((img) => {
+    document.querySelector('.memes-gallery').innerHTML = ''
     var elImg = new Image()
     elImg.src = img
     elImg.onload = () => {

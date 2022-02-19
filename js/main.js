@@ -62,7 +62,6 @@ function onImgClick(id) {
   setCanvasDimensions()
 
   renderMeme()
-  selectLine()
 }
 
 function showMemeEditor() {
@@ -90,6 +89,7 @@ function renderStickers(idx) {
 
 function openMemes() {
   var memes = getMemesForDisplay()
+  console.log('memes', memes)
   var elMemesGallery = document.querySelector('.memes-gallery')
   document.querySelector('.memes-gallery').classList.remove('hide-memes')
   document.querySelector('.meme-editor').style.display = 'none'

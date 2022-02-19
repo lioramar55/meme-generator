@@ -4,8 +4,11 @@ var gElCanvas
 var gCtx
 var gDrag = {
   isOn: false,
+  resizingOn: false,
   startPos: {},
   line: -1,
+  rect: { pos: {}, color: 'white', width: 'full', height: 'full' },
+  circle: { color: 'blue', size: 7, pos: {} },
 }
 
 // Canvas Functions
@@ -20,10 +23,8 @@ function renderMeme() {
   const meme = getMeme()
   const memeTxt = meme.lines[meme.selectedLineIdx].txt
   // draw the image on the canvas
-  // initilize gCtx
   drawCleanCanvas()
-  drawCanvas()
-  // Writing the meme txt in the input
+  // filling the meme.txt in the input
   document.querySelector('.editor input[type=text]').value = memeTxt
 }
 
@@ -85,25 +86,39 @@ function drawCanvas() {
   const img = getMemeImg()
   drawImageOnCanvas(img)
   drawLines(meme)
+
+  if (gDrag.resizingOn) selectLine()
 }
 
-function drawLines(meme, align) {
+function drawLines(meme) {
   meme.lines.forEach((line, idx) => {
+    if (line.align) alignText()
     gCtx.font = `${line.size}px ${line.font}`
+    var textWidth = gCtx.measureText(line.txt)
+    if (textWidth * 2 > gDrag.rect.width) {
+      console.log('text too big')
+    }
     gCtx.fillStyle = line.color
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y)
       } else gCtx.fillText(line.txt, line.x, line.y)
     }
-    if (align) alignTextTo(line.align)
   })
 }
 
 function drawCleanCanvas() {
   const img = getMemeImg()
+  const line = getCurrentLine()
   drawImageOnCanvas(img)
-  drawLines(getMeme(), true)
+
+  gDrag.rect.width = gElCanvas.width - 40
+  gDrag.rect.height = 80
+  gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
+  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
+  drawLines(getMeme())
+  drawResizingDot()
+  selectLine()
 }
 
 function drawImageOnCanvas(img) {
@@ -125,7 +140,6 @@ function onSetFont(e) {
   drawCanvas()
 }
 
-//TODO
 function onShareCanvas() {
   const imgDataURL = gElCanvas.toDataURL('image/jpeg')
   uploadImg(imgDataURL)
@@ -164,21 +178,37 @@ function onTextStroke() {
 }
 
 function onAlignText(e) {
-  var elClassList = e.path[1].classList
-  var alignTo
-  if (elClassList.contains('align-to-left')) alignTo = 'left'
-  else if (elClassList.contains('align-to-right')) alignTo = 'right'
-  else alignTo = 'center'
-  alignTextTo(alignTo)
+  var alignTo = e.target.dataset.align
+  setLineAlignment(alignTo)
+  alignText()
   drawCanvas()
-  onSelectLine()
+  selectLine()
+}
+
+function alignText() {
+  var line = getCurrentLine()
+  switch (line.align) {
+    case 'left':
+      line.x = 30
+      gDrag.rect.pos.x = line.x - 20
+      break
+    case 'right':
+      var lineWidth = gCtx.measureText(line.txt).width
+      line.x = gElCanvas.width - lineWidth - 30
+      gDrag.rect.pos.x = line.x - 20
+      break
+    case 'center':
+      line.x = gElCanvas.width / 2 - gCtx.measureText(line.txt).width / 2
+      gDrag.rect.pos.x = line.x - 20
+      break
+  }
 }
 
 function onChangeFontSize(e) {
   var isPlus = e.path[1].classList.contains('increase-font')
   changeFontSize(isPlus)
   drawCanvas()
-  onSelectLine()
+  selectLine()
 }
 
 function onDeleteLine() {
@@ -192,7 +222,7 @@ function onUserType(e) {
   if (currLine === -1 || !currLine) return
   setLineText(e.target.value)
   drawCanvas()
-  onSelectLine()
+  selectLine()
 }
 
 function onSwitchLine() {
@@ -201,7 +231,7 @@ function onSwitchLine() {
   if (meme.selectedLineIdx === meme.lines.length - 1) meme.selectedLineIdx = 0
   else meme.selectedLineIdx++
   drawCanvas()
-  onSelectLine()
+  selectLine()
 }
 
 function onAddLine() {
@@ -216,9 +246,7 @@ function onSetColor(e) {
   drawCanvas()
 }
 
-//  =====================
 //      Canvas logic
-// ====================
 
 // Touch events
 
@@ -233,7 +261,11 @@ function getTouchCoords(e, x, y) {
 function touchStart(e) {
   e.preventDefault()
   const { x, y } = getTouchCoords(e)
+
   gDrag.line = isTouchingLine(x, y)
+  if (isTouchingDot(x, y)) {
+    gDrag.resizingOn = true
+  }
   if (gDrag.line !== -1) {
     onSelectLine(gDrag.line)
     gDrag.isOn = true
@@ -248,6 +280,13 @@ function touchMove(e) {
   const { x, y } = getTouchCoords(e)
   const dx = x - gDrag.startPos.x
   const dy = y - gDrag.startPos.y
+  const currLine = getCurrentLine()
+  if (gDrag.resizingOn) {
+    gDrag.rect.width = dx - currLine.x + 20
+    gDrag.rect.height = dy - (currLine.y - 50)
+  }
+  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
+  gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
   moveLineTo(dx, dy)
   gDrag.startPos = { x, y }
   drawCanvas()
@@ -255,8 +294,11 @@ function touchMove(e) {
 }
 
 function touchEnd() {
+  onSelectLine()
+
   gDrag.isOn = false
   gDrag.line = -1
+  gDrag.resizingOn = false
 }
 
 // Mouse Events
@@ -270,26 +312,40 @@ function startDrag(e) {
     gDrag.isOn = true
     gDrag.startPos = { x, y }
   }
+  if (isTouchingDot(x, y)) {
+    gDrag.resizingOn = true
+  }
 }
 
 function moveLine(e) {
   const x = e.offsetX
   const y = e.offsetY
-
+  const currLine = getCurrentLine()
+  if (gDrag.resizingOn) {
+    gDrag.rect.width = x - currLine.x + 20
+    gDrag.rect.height = y - (currLine.y - 50)
+    gDrag.circle.pos = { x, y }
+    drawCanvas()
+  }
   if (!gDrag.isOn) return
+  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
   document.body.style.cursor = 'grabbing'
 
   if (gDrag.line !== -1) {
     var dx = x - gDrag.startPos.x
     var dy = y - gDrag.startPos.y
+    setLineAlignment('none')
     moveLineTo(dx, dy)
     gDrag.startPos = { x, y }
+
+    gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
   }
   drawCanvas()
 }
 
 function stopDrag() {
   gDrag.isOn = false
+  gDrag.resizingOn = false
   gDrag.line = -1
   document.body.style.cursor = 'default'
 }
@@ -314,51 +370,55 @@ function onKeyPress(e) {
 
 function onSelectLine(selectedLine) {
   var currLine = getCurrentLine()
+  var meme = getMeme()
   if (!currLine || !currLine.txt) return
   // checking if user toggles between lines
-  if (selectedLine !== currLine) drawCanvas()
+  if (selectedLine !== currLine && meme.lines.length > 1) drawCanvas()
   selectLine()
 }
 
 function selectLine() {
-  var currLine = getCurrentLine()
-  var rectWidth = gElCanvas.width - 40
-  gCtx.strokeStyle = currLine.stroke ? '#f0f0f0' : '#111'
-  gCtx.lineWidth = 3
-  gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
-  gCtx.globalAlpha = 0.15
-  gCtx.fillStyle = 'black'
-  gCtx.fillRect(21, currLine.y - 49, rectWidth - 1, 79)
-  gCtx.globalAlpha = 1.0
+  drawRect()
+  drawResizingDot()
 }
 
-function alignTextTo(alignTo) {
-  var currLine = getCurrentLine()
-  switch (alignTo) {
-    case 'left':
-      currLine.x = 30
-      break
-    case 'right':
-      var lineWidth = gCtx.measureText(currLine.txt).width
-      var xCoord = gElCanvas.width - lineWidth - 30
-      currLine.x = xCoord
-      break
-    case 'center':
-      currLine.x = gElCanvas.width / 2 - gCtx.measureText(currLine.txt).width / 2
-      break
-  }
+function drawResizingDot() {
+  //creating the little dot for resizing the line
+  gCtx.beginPath()
+  gCtx.fillStyle = gDrag.circle.color
+  gCtx.arc(gDrag.circle.pos.x, gDrag.circle.pos.y, gDrag.circle.size, 0, 2 * Math.PI)
+  gCtx.fill()
+  console.log('example')
+}
+
+function drawRect() {
+  // draw the stroke of the surrounding rect
+  gCtx.strokeStyle = '111'
+  gCtx.lineWidth = 3
+  gCtx.strokeRect(gDrag.rect.pos.x, gDrag.rect.pos.y, gDrag.rect.width, gDrag.rect.height)
+  gCtx.globalAlpha = 0.15
+  gCtx.fillStyle = gDrag.rect.color
+  // fill the background of the containing rect
+  gCtx.fillRect(
+    gDrag.rect.pos.x + 1,
+    gDrag.rect.pos.y + 1,
+    gDrag.rect.width - 1,
+    gDrag.rect.height - 1
+  )
+  gCtx.globalAlpha = 1.0
 }
 
 function onCanvasClick(e) {
   const x = e.offsetX
   const y = e.offsetY
   var selectedLine = isTouchingLine(x, y)
-  if (selectedLine !== -1) {
-    gMeme.selectedLineIdx = selectedLine
-    onSelectLine(selectedLine)
-  } else {
-    drawCanvas()
-  }
+  if (selectedLine !== -1) onSelectLine(selectedLine)
+  else drawCanvas()
+}
+
+function isTouchingDot(x, y) {
+  const distance = Math.sqrt((gDrag.circle.pos.x - x) ** 2 + (gDrag.circle.pos.y - y) ** 2)
+  return distance <= gDrag.circle.size
 }
 
 function onCanvasDownload() {

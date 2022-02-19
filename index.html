@@ -53,13 +53,13 @@
             <button class="switch"><img src="assets/icons/switch.png" /></button>
             <button class="add"><img src="assets/icons/add.png" /></button>
             <button class="trash"><img src="assets/icons/trash.png" /></button>
-            <button class="increase-font"><img src="assets/icons/increase-font.png" /></button>
+            <button class="increase-font"><img  src="assets/icons/increase-font.png" /></button>
             <button class="decrease-font"><img src="assets/icons/decrease-font.png" /></button>
-            <button class="align-to-left"><img src="assets/icons/align-to-left.png" /></button>
-            <button class="center-align-text">
-              <img src="assets/icons/center-text-alignment.png" />
+            <button class="align-to-left"><img data-align="left" src="assets/icons/align-to-left.png" /></button>
+            <button class="center-align-text" >
+              <img data-align="center" src="assets/icons/center-text-alignment.png" />
             </button>
-            <button class="align-to-right"><img src="assets/icons/align-to-right.png" /></button>
+            <button class="align-to-right"><img data-align="right"  src="assets/icons/align-to-right.png" /></button>
             <select name="font" id="font">
               <option value="Impact">Impact</option>
               <option value="Ariel">Ariel</option>
@@ -79,7 +79,7 @@
             <button class="save-meme"><img src="assets/icons/save.png"></button>
             <a class="download btn">Download</a>
             <a  class="fb" hidden title="Share on Facebook" target="_blank"><img src="assets/icons/fb.png" ></a>
-            <a  class="whatsapp" hidden target="_blank"><img src="assets/icons/whatsapp.png"></a>
+            <a  class="whatsapp" data-action="share/whatsapp/share" hidden target="_blank"><img src="assets/icons/whatsapp.png"></a>
             <label for="upload" class="btn">Upload
               <input type="file" id="upload" name="upload">
             </label>

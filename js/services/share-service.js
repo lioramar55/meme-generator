@@ -4,27 +4,10 @@ function uploadImg(imgDataUrl) {
   // A function to be called if request succeeds
   function onSuccess(uploadedImgUrl) {
     const encodedUploadedImgUrl = encodeURIComponent(uploadedImgUrl)
-    const shareData = {
-      title: 'My Meme',
-      text: 'Check out my crazy meme',
-      url: `${encodedUploadedImgUrl}`,
-    }
-    console.log(encodedUploadedImgUrl)
     var elFbBtn = document.querySelector('.fb')
     var elWhatsappBtn = document.querySelector('.whatsapp')
     elFbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUploadedImgUrl}&t=${encodedUploadedImgUrl}`
-    // elFbBtn.onclick = window.open(
-    //   `https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`
-    // )
-    elWhatsappBtn.href = `whatsapp://send?text='${+encodedUploadedImgUrl}`
-    // async () => {
-    //   try {
-    //     await navigator.share(`whatsapp://send?text=${shareData.text} - ${shareData.url}`)
-    //     console.log('Success')
-    //   } catch (err) {
-    //     console.log('err', err)
-    //   }
-    // }
+    elWhatsappBtn.href = `whatsapp://send?text='${encodedUploadedImgUrl}'`
     return false
   }
 

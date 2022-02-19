@@ -216,6 +216,11 @@ function isTouchingLine(x, y) {
 
 // SET Functions
 
+function setLineAlignment(alignTo) {
+  var line = getCurrentLine()
+  line.align = alignTo
+}
+
 function moveLineTo(x, y) {
   gMeme.lines[gMeme.selectedLineIdx].x += x
   gMeme.lines[gMeme.selectedLineIdx].y += y
