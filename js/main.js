@@ -43,6 +43,7 @@ function addEditorListeners() {
   document.querySelector('.download').addEventListener('click', onCanvasDownload)
   document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
   document.querySelector('#upload').addEventListener('change', onUploadImg)
+  document.querySelector('.share').addEventListener('click', onShareCanvas)
 }
 
 // opening the meme editor

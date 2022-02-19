@@ -78,11 +78,12 @@
             <button class="stickers-right"><img  src="assets/icons/right-arrow.png" alt=""></button>
             <button class="save-meme"><img src="assets/icons/save.png"></button>
             <a class="download btn">Download</a>
-            <a href="" class="fb" target="_blank"><img src="assets/icons/fb.png" ></a>
-            <a href="" class="whatsapp" target="_blank"><img src="assets/icons/whatsapp.png"></a>
+            <a  class="fb" hidden title="Share on Facebook" target="_blank"><img src="assets/icons/fb.png" ></a>
+            <a  class="whatsapp" hidden target="_blank"><img src="assets/icons/whatsapp.png"></a>
             <label for="upload" class="btn">Upload
               <input type="file" id="upload" name="upload">
             </label>
+            <button class="share btn">Share</button>
           </div>
         </section>
         <section class="memes-gallery hide-memes"></section>
@@ -98,6 +99,7 @@
     <script src="js/utils/utils.js"></script>
     <script src="js/utils/memesSentences.js"></script>
     <script src="js/services/storage-service.js"></script>
+    <script src="js/services/share-service.js"></script>
     <script src="js/services/i18n-service.js"></script>
     <script src="js/services/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>

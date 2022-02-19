@@ -1,6 +1,6 @@
 'use strict'
 
-var gCanvas
+var gElCanvas
 var gCtx
 var gDrag = {
   isOn: false,
@@ -12,8 +12,8 @@ var gDrag = {
 
 // init
 function initCanvas() {
-  gCanvas = document.querySelector('.meme-editor canvas')
-  gCtx = gCanvas.getContext('2d')
+  gElCanvas = document.querySelector('.meme-editor canvas')
+  gCtx = gElCanvas.getContext('2d')
 }
 
 function renderMeme() {
@@ -30,17 +30,17 @@ function renderMeme() {
 // Add Event Listeners
 
 function addCanvasListeners() {
-  gCanvas.addEventListener('click', onCanvasClick)
-  gCanvas.addEventListener('keydown', onKeyPress)
-  gCanvas.addEventListener('mousedown', startDrag)
-  gCanvas.addEventListener('mousemove', moveLine)
-  gCanvas.addEventListener('mouseup', stopDrag)
+  gElCanvas.addEventListener('click', onCanvasClick)
+  gElCanvas.addEventListener('keydown', onKeyPress)
+  gElCanvas.addEventListener('mousedown', startDrag)
+  gElCanvas.addEventListener('mousemove', moveLine)
+  gElCanvas.addEventListener('mouseup', stopDrag)
 }
 
 function addTouchListeners() {
-  gCanvas.addEventListener('touchstart', touchStart)
-  gCanvas.addEventListener('touchmove', touchMove)
-  gCanvas.addEventListener('touchend', touchEnd)
+  gElCanvas.addEventListener('touchstart', touchStart)
+  gElCanvas.addEventListener('touchmove', touchMove, false)
+  gElCanvas.addEventListener('touchend', touchEnd, false)
 }
 
 // Get and Set canvas dimension
@@ -57,26 +57,25 @@ function setCanvasDimensions(image) {
   // Check the user device
   if (windowWidth > 880) {
     if (windowWidth > width * 2) {
-      width = width * 1.5 <= 600 ? width : 600
+      width = width * 1.5 >= 600 ? width : 600
       height = aspectRatio * width
     } else {
       width = width * 0.75
       height = aspectRatio * width
     }
-  } else if (windowWidth < 880 && windowWidth > 660) {
-    width = 550
+  } else if (windowWidth <= 880 && windowWidth > 660) {
+    width = windowWidth - 80
     height = aspectRatio * width
-  } else if (windowWidth < 660) {
+  } else {
     width = windowWidth - 50
     height = aspectRatio * width
   }
-
-  gCanvas.height = height
-  gCanvas.width = width
+  gElCanvas.height = height
+  gElCanvas.width = width
 }
 
 function getCanvasDimension() {
-  return { height: gCanvas.height, width: gCanvas.width }
+  return { height: gElCanvas.height, width: gElCanvas.width }
 }
 
 // Draw canvas
@@ -108,26 +107,13 @@ function drawCleanCanvas() {
 }
 
 function drawImageOnCanvas(img) {
-  gCanvas.width = img.width
-  gCanvas.height = img.height
-  // gCtx.drawImage(elImg, 0, 0)
-  gCtx.drawImage(
-    img,
-    0,
-    0,
-    img.width,
-    img.height, // source image
-    0,
-    0,
-    gCanvas.width,
-    gCanvas.height
-  )
+  gCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, gElCanvas.width, gElCanvas.height)
 }
 
 // storing meme
 
 function onSaveMeme() {
-  var dataURL = gCanvas.toDataURL('image/jpeg')
+  var dataURL = gElCanvas.toDataURL('image/jpeg')
   saveMemeToStorage(dataURL)
   toggleNotification()
 }
@@ -141,7 +127,10 @@ function onSetFont(e) {
 
 //TODO
 function onShareCanvas() {
-  document.querySelector('.share').classList.add('show-links')
+  const imgDataURL = gElCanvas.toDataURL('image/jpeg')
+  uploadImg(imgDataURL)
+  document.querySelector('.fb').hidden = false
+  document.querySelector('.whatsapp').hidden = false
 }
 
 function onUploadImg(e) {
@@ -234,7 +223,7 @@ function onSetColor(e) {
 // Touch events
 
 function getTouchCoords(e, x, y) {
-  var rect = gCanvas.getBoundingClientRect()
+  var rect = gElCanvas.getBoundingClientRect()
   const touch = e.touches[0]
   x = touch.clientX - rect.left
   y = touch.clientY - rect.top
@@ -333,7 +322,7 @@ function onSelectLine(selectedLine) {
 
 function selectLine() {
   var currLine = getCurrentLine()
-  var rectWidth = gCanvas.width - 40
+  var rectWidth = gElCanvas.width - 40
   gCtx.strokeStyle = currLine.stroke ? '#f0f0f0' : '#111'
   gCtx.lineWidth = 3
   gCtx.strokeRect(20, currLine.y - 50, rectWidth, 80)
@@ -351,11 +340,11 @@ function alignTextTo(alignTo) {
       break
     case 'right':
       var lineWidth = gCtx.measureText(currLine.txt).width
-      var xCoord = gCanvas.width - lineWidth - 30
+      var xCoord = gElCanvas.width - lineWidth - 30
       currLine.x = xCoord
       break
     case 'center':
-      currLine.x = gCanvas.width / 2 - gCtx.measureText(currLine.txt).width / 2
+      currLine.x = gElCanvas.width / 2 - gCtx.measureText(currLine.txt).width / 2
       break
   }
 }
@@ -373,7 +362,7 @@ function onCanvasClick(e) {
 }
 
 function onCanvasDownload() {
-  var dataURL = gCanvas.toDataURL('image/jpeg')
+  var dataURL = gElCanvas.toDataURL('image/jpeg')
   var elLink = document.querySelector('.download')
   elLink.href = dataURL
   elLink.download = 'My-Meme.jpg'

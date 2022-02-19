@@ -133,22 +133,25 @@ label[for='color'] {
   background-color: var(--clr-primary);
 }
 
-/* .meme-editor .share {
-  grid-area: 6 / 4 / 6 / 6;
-  color: #fff;
-  background-color: var(--clr-primary);
-} */
-
 #upload {
   display: none;
+}
+
+.meme-editor .share {
+  grid-area: 6 / 5 / 6 / 6;
+  color: #fff;
+  background-color: var(--clr-primary);
 }
 
 label[for='upload'] {
   border: 1px solid #ccc;
   display: inline-block;
   padding: 6px 12px;
+  grid-area: 6 / 4 / 6 / 5;
+
   cursor: pointer;
 }
+
 .stickers-container {
   display: flex;
   justify-content: space-around;
@@ -160,6 +163,10 @@ label[for='upload'] {
   cursor: pointer;
 }
 
-.share-links a {
+.fb,
+.whatsapp {
   cursor: pointer;
+  width: 50px;
+  align-self: center;
+  justify-self: center;
 }
