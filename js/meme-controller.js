@@ -343,28 +343,25 @@ function touchStart(e) {
 }
 
 function touchMove(e) {
-  if (!gDrag.isOn) return
   const { x, y } = getTouchCoords(e)
-  const dx = x - gDrag.startPos.x
-  const dy = y - gDrag.startPos.y
   const currLine = getCurrentLine()
   if (gDrag.resizingOn) {
-    gDrag.rect.width = dx - currLine.x + 20
-    gDrag.rect.height = dy - (currLine.y - 50)
-    gDrag.circle.pos = { x: dx, y: dy }
-  } else {
-    gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
+    resizeRect(x, y, currLine)
   }
-  gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
-  moveLineTo(dx, dy)
-  gDrag.startPos = { x, y }
+  if (!gDrag.isOn) return
+  if (gDrag.line !== -1) {
+    const dx = x - gDrag.startPos.x
+    const dy = y - gDrag.startPos.y
+    gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
+    gDrag.startPos = { x, y }
+    moveLineTo(dx, dy)
+    setLineAlignment('none')
+  }
   drawCanvas()
   onSelectLine(gDrag.line)
 }
 
 function touchEnd() {
-  onSelectLine()
-
   gDrag.isOn = false
   gDrag.line = -1
   gDrag.resizingOn = false
@@ -391,11 +388,7 @@ function moveLine(e) {
   const y = e.offsetY
   const currLine = getCurrentLine()
   if (gDrag.resizingOn) {
-    gDrag.isResized = true
-    gDrag.rect.width = x - currLine.x + 20
-    gDrag.rect.height = y - (currLine.y - 50)
-    gDrag.circle.pos = { x, y }
-    drawCanvas()
+    resizeRect(x, y, currLine)
   }
   if (!gDrag.isOn) return
   gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
@@ -404,10 +397,9 @@ function moveLine(e) {
   if (gDrag.line !== -1) {
     var dx = x - gDrag.startPos.x
     var dy = y - gDrag.startPos.y
-    setLineAlignment('none')
     moveLineTo(dx, dy)
     gDrag.startPos = { x, y }
-
+    setLineAlignment('none')
     gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
   }
   drawCanvas()
@@ -418,6 +410,14 @@ function stopDrag() {
   gDrag.resizingOn = false
   gDrag.line = -1
   document.body.style.cursor = 'default'
+}
+
+function resizeRect(x, y, line) {
+  gDrag.isResized = true
+  gDrag.rect.width = x - line.x + 20
+  gDrag.rect.height = y - (line.y - 50)
+  gDrag.circle.pos = { x, y }
+  drawCanvas()
 }
 
 // Inline Editing
