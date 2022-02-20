@@ -74,9 +74,7 @@ function onTagClick(e, elTag) {
 
 function onFlexibleClick() {
   var meme = getFlexibleMeme()
-  var elImg = getMemeImg(meme.selectedImgId)
-  onImgClick(meme.selectedImgId, elImg)
-  drawCanvas()
+  onImgClick(meme.selectedImgId)
 }
 
 function onUserSearch(e) {

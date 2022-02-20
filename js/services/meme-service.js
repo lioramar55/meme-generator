@@ -98,24 +98,35 @@ var gImgs = [
     keywords: ['fixed it', 'thank god', 'success'],
   },
 ]
-var gMeme = {
-  selectedImgId: null,
-  selectedLineIdx: 0,
-  lines: [
-    {
-      txt: 'Enter something funny',
-      size: 30,
-      stroke: false,
-      align: 'left',
-      color: '#111',
-      font: 'Impact',
-      x: 100,
-      y: 75,
-    },
-  ],
-}
+var gMeme = {}
 
 var gMemes = []
+
+function resetMeme() {
+  var newLine = getNewLine('Enter something funny', 100, 75)
+  gMeme = {
+    selectedImgId: gMeme.selectedImgId,
+    selectedLineIdx: 0,
+    lines: [newLine],
+  }
+}
+
+function getNewLine(txt, x, y) {
+  return {
+    txt,
+    size: 30,
+    align: 'left',
+    color: 'black',
+    font: 'Impact',
+    stroke: false,
+    x: x ? x : 100,
+    y,
+  }
+}
+
+function getMeme() {
+  return gMeme
+}
 
 // Storage
 
@@ -135,6 +146,7 @@ function getImagesForDisplay() {
 }
 
 function getCurrentLine() {
+  // if (!gMeme.lines) return
   return gMeme.lines[gMeme.selectedLineIdx]
 }
 
@@ -152,29 +164,17 @@ function getTagsForDisplay() {
   return { tags: gKeywordSearchCountMap, tagCount: gTagCount }
 }
 
-function getMeme() {
-  return gMeme
-}
-
 function getFlexibleMeme() {
-  var idx
-  idx = rand(0, memesSentences.length - 1)
+  var idx = rand(0, memesSentences.length - 1)
+  var isTwoLines = Math.random() > 0.5 ? true : false
+  resetMeme()
   gMeme.selectedImgId = idx
   idx = rand(0, memesSentences.length - 1)
   gMeme.lines[0].txt = memesSentences[idx]
-  var isTwoLines = Math.random > 0.5 ? true : false
+
   if (isTwoLines) {
     idx = rand(0, memesSentences.length - 1)
-    var newLine = {
-      txt: memesSentences[idx],
-      size: 30,
-      stroke: false,
-      align: 'left',
-      color: '#111',
-      font: 'Impact',
-      x: 100,
-      y: 75,
-    }
+    var newLine = getNewLine(memesSentences[idx], 100, 75)
     gMeme.lines.push(newLine)
   }
   return gMeme
@@ -242,26 +242,6 @@ function setSelectedImg(id) {
   gMeme.selectedImgId = id
 }
 
-function resetMeme() {
-  if (!gMeme.selectedImgId) return
-  gMeme = {
-    selectedImgId: null,
-    selectedLineIdx: 0,
-    lines: [
-      {
-        txt: 'Enter something funny',
-        size: 30,
-        stroke: false,
-        align: 'left',
-        color: '#111',
-        font: 'Impact',
-        x: 100,
-        y: 75,
-      },
-    ],
-  }
-}
-
 function setMemeColor(color) {
   gMeme.lines[gMeme.selectedLineIdx].color = color
 }
@@ -273,16 +253,7 @@ function toggleTextStroke() {
 function addNewLine() {
   var { height } = getCanvasDimension()
   var y = gMeme.lines.length === 1 ? height - 50 : height / 2
-  var newLine = {
-    txt: '',
-    size: 30,
-    align: 'left',
-    color: 'black',
-    font: 'Impact',
-    stroke: false,
-    x: 100,
-    y,
-  }
+  var newLine = getNewLine('', undefined, y)
   gMeme.selectedLineIdx++
   gMeme.lines.push(newLine)
 }
@@ -294,17 +265,8 @@ function changeFontSize(isPlus) {
 
 function deleteLine() {
   if (gMeme.lines.length === 1) {
-    gMeme.lines = [
-      {
-        txt: '',
-        size: 30,
-        align: 'left',
-        color: 'black',
-        font: 'Impact',
-        x: 100,
-        y: 100 + gMeme.lines[gMeme.selectedLineIdx].y,
-      },
-    ]
+    var newLine = getNewLine('', 100, 100 + gMeme.lines[gMeme.selectedLineIdx].y)
+    gMeme.lines = [newLine]
   } else {
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
     gMeme.selectedLineIdx = 0

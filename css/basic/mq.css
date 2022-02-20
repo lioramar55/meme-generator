@@ -73,4 +73,7 @@
   .tags {
     gap: 0.5rem;
   }
+  .about {
+    flex-direction: column;
+  }
 }

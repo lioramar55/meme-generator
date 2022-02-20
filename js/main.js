@@ -10,6 +10,7 @@ function init() {
   renderInfoSection()
   renderGallery()
   initCanvas()
+  resetMeme()
 }
 
 // Adding Event Listeners
@@ -25,6 +26,7 @@ function addEventListeners() {
 
 function addEditorListeners() {
   document.querySelector('.tags button').addEventListener('click', toggleTags)
+  document.querySelector('.logo').addEventListener('click', openGallery)
   document.querySelector('#data-list').addEventListener('input', onUserSearch)
   document.querySelector('.meme-editor input[type=text]').addEventListener('input', onUserType)
   document.querySelector('.meme-editor input[type=text]').addEventListener('focus', onSelectLine)
@@ -90,7 +92,6 @@ function renderStickers(idx) {
 
 function openMemes() {
   var memes = getMemesForDisplay()
-  console.log('memes', memes)
   var elMemesGallery = document.querySelector('.memes-gallery')
   document.querySelector('.memes-gallery').classList.remove('hide-memes')
   document.querySelector('.meme-editor').style.display = 'none'

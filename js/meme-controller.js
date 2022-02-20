@@ -7,7 +7,8 @@ var gDrag = {
   resizingOn: false,
   startPos: {},
   line: -1,
-  rect: { pos: {}, color: 'white', width: 'full', height: 'full' },
+  txtMaxWidth: null,
+  rect: { pos: {}, color: 'white', width: null, height: null },
   circle: { color: 'blue', size: 7, pos: {} },
 }
 
@@ -86,51 +87,65 @@ function drawCanvas() {
   const img = getMemeImg()
   drawImageOnCanvas(img)
   drawLines(meme)
-
   if (gDrag.resizingOn) selectLine()
 }
 
 function drawLines(meme) {
   meme.lines.forEach((line, idx) => {
+    initDrag()
     if (line.align) alignText()
-    gCtx.font = `${line.size}px ${line.font}`
     var textWidth = gCtx.measureText(line.txt).width
     gCtx.fillStyle = line.color
-
     if (textWidth > gDrag.rect.width) {
       textWidth = gCtx.measureText(line.txt).width
-      gCtx.font = `${line.size}px ${line.font}`
       if (line.txt) {
         if (meme.lines[idx].stroke) {
-          gCtx.strokeText(line.txt, line.x, line.y)
-        } else gCtx.fillText(line.txt, line.x, line.y, gElCanvas.width - gDrag.rect.width)
+          gCtx.strokeText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
+        } else gCtx.fillText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
       }
       return
     }
     if (line.txt) {
       if (meme.lines[idx].stroke) {
-        gCtx.strokeText(line.txt, line.x, line.y)
-      } else gCtx.fillText(line.txt, line.x, line.y)
+        gCtx.strokeText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
+      } else gCtx.fillText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
     }
   })
 }
+
+function drawTxt() {}
 
 function drawCleanCanvas() {
   const img = getMemeImg()
   const line = getCurrentLine()
   drawImageOnCanvas(img)
-
-  gDrag.rect.width = gElCanvas.width - 40
-  gDrag.rect.height = 80
-  gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
-  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
   drawLines(getMeme())
+  gDrag.circle.pos = { x: gDrag.rect.width + 8, y: line.y + 30 }
   drawResizingDot()
   selectLine()
 }
 
+function initDrag() {
+  const line = getCurrentLine()
+  gCtx.font = `${line.size}px ${line.font}`
+  gDrag.rect.width = calcFontWidth() + 40
+  gDrag.rect.height = 80
+  gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
+  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
+  gDrag.txtMaxWidth = gDrag.rect.width
+  if (gDrag.txtMaxWidth >= gDrag.rect.width) {
+    gCtx.font = `${line.size}px ${line.font}`
+  }
+}
+
 function drawImageOnCanvas(img) {
   gCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, gElCanvas.width, gElCanvas.height)
+}
+
+function calcFontWidth() {
+  var line = getCurrentLine()
+  gCtx.font = `${line.size}px ${line.font}`
+  return gCtx.measureText(line.txt).width
 }
 
 // storing meme
@@ -244,9 +259,9 @@ function onSwitchLine() {
 
 function onAddLine() {
   document.querySelector('.meme-editor input[type=text]').value = ''
-
   document.querySelector('.meme-editor input[type=text]').focus()
   addNewLine()
+  drawCanvas()
 }
 
 function onSetColor(e) {
@@ -330,8 +345,9 @@ function moveLine(e) {
   const y = e.offsetY
   const currLine = getCurrentLine()
   if (gDrag.resizingOn) {
-    gDrag.rect.width = x - currLine.x + 20
-    gDrag.rect.height = y - (currLine.y - 50)
+    // gDrag.rect.width = x - currLine.x + 20
+    // gDrag.rect.height = y - (currLine.y - 50)
+    gDrag.font
     gDrag.circle.pos = { x, y }
     drawCanvas()
   }
@@ -396,7 +412,6 @@ function drawResizingDot() {
   gCtx.fillStyle = gDrag.circle.color
   gCtx.arc(gDrag.circle.pos.x, gDrag.circle.pos.y, gDrag.circle.size, 0, 2 * Math.PI)
   gCtx.fill()
-  console.log('example')
 }
 
 function drawRect() {
@@ -430,6 +445,7 @@ function isTouchingDot(x, y) {
 }
 
 function onCanvasDownload() {
+  drawCanvas()
   var dataURL = gElCanvas.toDataURL('image/jpeg')
   var elLink = document.querySelector('.download')
   elLink.href = dataURL
