@@ -1,7 +1,6 @@
 'use strict'
 
-var gElCanvas
-var gCtx
+//Global variables
 var gDrag = {
   isOn: false,
   resizingOn: false,
@@ -11,6 +10,33 @@ var gDrag = {
   rect: { pos: {}, color: 'white', width: null, height: null },
   circle: { color: 'blue', size: 7, pos: {} },
 }
+var gElCanvas
+var gCtx
+var gSticker = {
+  idx: 0,
+  toDisplay: 6,
+}
+var gStickers = [
+  '🐸',
+  '💣',
+  '💎',
+  '💥',
+  '💦',
+  '💨',
+  '🔥',
+  '❤️',
+  '👍',
+  '😀',
+  '😁',
+  '😅',
+  '🤣',
+  '🤩',
+  '🙃',
+  '🙈',
+  '🙉',
+  '🙊',
+  '🐶',
+]
 
 // Canvas Functions
 
@@ -23,10 +49,31 @@ function initCanvas() {
 function renderMeme() {
   const meme = getMeme()
   const memeTxt = meme.lines[meme.selectedLineIdx].txt
+  gSticker.idx = 0
   // draw the image on the canvas
   drawCleanCanvas()
   // filling the meme.txt in the input
   document.querySelector('.editor input[type=text]').value = memeTxt
+}
+
+// render stickers
+function renderStickers(e) {
+  var lastIdx = Math.floor(gStickers.length / gSticker.toDisplay) - 1
+  if (e) {
+    e.target.classList.contains('next') ? gSticker.idx++ : gSticker.idx--
+  } else gSticker.idx = 0
+  if (gSticker.idx >= lastIdx) {
+    console.log('example')
+    gSticker.idx = 0
+  } else if (gSticker.idx < 0) gSticker.idx = lastIdx
+  var startIdx = gSticker.idx * gSticker.toDisplay
+  var strHTML = ``
+  for (var i = startIdx; i <= startIdx + gSticker.toDisplay; i++) {
+    if (i < gStickers.length - 1)
+      strHTML += `<span onclick="onAddSticker(this)">${gStickers[i]}</span>`
+  }
+  console.log(gSticker.idx)
+  document.querySelector('.stickers-container').innerHTML = strHTML
 }
 
 // Add Event Listeners
@@ -107,8 +154,8 @@ function drawLines(meme) {
     }
     if (line.txt) {
       if (meme.lines[idx].stroke) {
-        gCtx.strokeText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
-      } else gCtx.fillText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
+        gCtx.strokeText(line.txt, line.x, line.y)
+      } else gCtx.fillText(line.txt, line.x, line.y)
     }
   })
 }
@@ -127,8 +174,9 @@ function drawCleanCanvas() {
 
 function initDrag() {
   const line = getCurrentLine()
+  const lineWidth = gCtx.measureText(line.txt).width
   gCtx.font = `${line.size}px ${line.font}`
-  gDrag.rect.width = calcFontWidth() + 40
+  gDrag.rect.width = lineWidth + 40
   gDrag.rect.height = 80
   gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
   gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
@@ -140,12 +188,6 @@ function initDrag() {
 
 function drawImageOnCanvas(img) {
   gCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, gElCanvas.width, gElCanvas.height)
-}
-
-function calcFontWidth() {
-  var line = getCurrentLine()
-  gCtx.font = `${line.size}px ${line.font}`
-  return gCtx.measureText(line.txt).width
 }
 
 // storing meme

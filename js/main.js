@@ -1,8 +1,5 @@
 'use strict'
 
-//Global variables
-var gStickers = ['🐸', '💣', '💎', '💥', '💦', '💨']
-
 // INITIALIZTION
 
 function init() {
@@ -48,6 +45,8 @@ function addEditorListeners() {
   document.querySelector('.flexible').addEventListener('click', onFlexibleClick)
   document.querySelector('#upload').addEventListener('change', onUploadImg)
   document.querySelector('.share').addEventListener('click', onShareCanvas)
+  document.querySelector('.stickers-left').addEventListener('click', renderStickers)
+  document.querySelector('.stickers-right').addEventListener('click', renderStickers)
 }
 
 // opening the meme editor
@@ -86,15 +85,6 @@ function showMemeEditor() {
 
   //render stickers
   renderStickers()
-}
-
-function renderStickers(idx) {
-  var i = idx ? idx : 0
-  var strHTML = ``
-  for (var i = 0; i < gStickers.length; i++) {
-    strHTML += `<span onclick="onAddSticker(this)">${gStickers[i]}</span>`
-  }
-  document.querySelector('.stickers-container').innerHTML = strHTML
 }
 
 function openMemes() {
