@@ -94,11 +94,19 @@ function drawLines(meme) {
   meme.lines.forEach((line, idx) => {
     if (line.align) alignText()
     gCtx.font = `${line.size}px ${line.font}`
-    var textWidth = gCtx.measureText(line.txt)
-    if (textWidth * 2 > gDrag.rect.width) {
-      console.log('text too big')
-    }
+    var textWidth = gCtx.measureText(line.txt).width
     gCtx.fillStyle = line.color
+
+    if (textWidth > gDrag.rect.width) {
+      textWidth = gCtx.measureText(line.txt).width
+      gCtx.font = `${line.size}px ${line.font}`
+      if (line.txt) {
+        if (meme.lines[idx].stroke) {
+          gCtx.strokeText(line.txt, line.x, line.y)
+        } else gCtx.fillText(line.txt, line.x, line.y, gElCanvas.width - gDrag.rect.width)
+      }
+      return
+    }
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y)
