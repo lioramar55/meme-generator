@@ -4,6 +4,7 @@
 var gDrag = {
   isOn: false,
   resizingOn: false,
+  isResized: false,
   startPos: {},
   line: -1,
   txtMaxWidth: null,
@@ -63,7 +64,6 @@ function renderStickers(e) {
     e.target.classList.contains('next') ? gSticker.idx++ : gSticker.idx--
   } else gSticker.idx = 0
   if (gSticker.idx >= lastIdx) {
-    console.log('example')
     gSticker.idx = 0
   } else if (gSticker.idx < 0) gSticker.idx = lastIdx
   var startIdx = gSticker.idx * gSticker.toDisplay
@@ -72,7 +72,6 @@ function renderStickers(e) {
     if (i < gStickers.length - 1)
       strHTML += `<span onclick="onAddSticker(this)">${gStickers[i]}</span>`
   }
-  console.log(gSticker.idx)
   document.querySelector('.stickers-container').innerHTML = strHTML
 }
 
@@ -139,11 +138,11 @@ function drawCanvas() {
 
 function drawLines(meme) {
   meme.lines.forEach((line, idx) => {
-    initDrag()
+    initDrag(line)
     if (line.align) alignText()
     var textWidth = gCtx.measureText(line.txt).width
     gCtx.fillStyle = line.color
-    if (textWidth > gDrag.rect.width) {
+    if (textWidth > gDrag.rect.width - 40) {
       textWidth = gCtx.measureText(line.txt).width
       if (line.txt) {
         if (meme.lines[idx].stroke) {
@@ -155,6 +154,8 @@ function drawLines(meme) {
     if (line.txt) {
       if (meme.lines[idx].stroke) {
         gCtx.strokeText(line.txt, line.x, line.y)
+        gCtx.fillStyle = 'white'
+        gCtx.fillText(line.txt, line.x, line.y)
       } else gCtx.fillText(line.txt, line.x, line.y)
     }
   })
@@ -166,21 +167,22 @@ function drawCleanCanvas() {
   const img = getMemeImg()
   const line = getCurrentLine()
   drawImageOnCanvas(img)
+  initDrag(line)
   drawLines(getMeme())
   gDrag.circle.pos = { x: gDrag.rect.width + 8, y: line.y + 30 }
-  drawResizingDot()
   selectLine()
 }
 
-function initDrag() {
-  const line = getCurrentLine()
-  const lineWidth = gCtx.measureText(line.txt).width
+function initDrag(line) {
   gCtx.font = `${line.size}px ${line.font}`
-  gDrag.rect.width = lineWidth + 40
-  gDrag.rect.height = 80
+  const lineWidth = gCtx.measureText(line.txt).width
+  if (!gDrag.isResized) {
+    gDrag.rect.width = lineWidth + 40
+    gDrag.rect.height = 80
+    gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
+  }
   gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
-  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: line.y + 30 }
-  gDrag.txtMaxWidth = gDrag.rect.width
+  gDrag.txtMaxWidth = gDrag.rect.width - 60
   if (gDrag.txtMaxWidth >= gDrag.rect.width) {
     gCtx.font = `${line.size}px ${line.font}`
   }
@@ -349,8 +351,10 @@ function touchMove(e) {
   if (gDrag.resizingOn) {
     gDrag.rect.width = dx - currLine.x + 20
     gDrag.rect.height = dy - (currLine.y - 50)
+    gDrag.circle.pos = { x: dx, y: dy }
+  } else {
+    gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
   }
-  gDrag.circle.pos = { x: gDrag.rect.width + gDrag.rect.pos.x, y: currLine.y + 30 }
   gDrag.rect.pos = { x: currLine.x - 20, y: currLine.y - 50 }
   moveLineTo(dx, dy)
   gDrag.startPos = { x, y }
@@ -387,9 +391,9 @@ function moveLine(e) {
   const y = e.offsetY
   const currLine = getCurrentLine()
   if (gDrag.resizingOn) {
-    // gDrag.rect.width = x - currLine.x + 20
-    // gDrag.rect.height = y - (currLine.y - 50)
-    gDrag.font
+    gDrag.isResized = true
+    gDrag.rect.width = x - currLine.x + 20
+    gDrag.rect.height = y - (currLine.y - 50)
     gDrag.circle.pos = { x, y }
     drawCanvas()
   }
@@ -439,7 +443,7 @@ function onSelectLine(selectedLine) {
   var meme = getMeme()
   if (!currLine || !currLine.txt) return
   // checking if user toggles between lines
-  if (selectedLine !== currLine && meme.lines.length > 1) drawCanvas()
+  if (selectedLine !== meme.selectedLineIdx && meme.lines.length > 1) drawCanvas()
   selectLine()
 }
 
@@ -450,6 +454,7 @@ function selectLine() {
 
 function drawResizingDot() {
   //creating the little dot for resizing the line
+
   gCtx.beginPath()
   gCtx.fillStyle = gDrag.circle.color
   gCtx.arc(gDrag.circle.pos.x, gDrag.circle.pos.y, gDrag.circle.size, 0, 2 * Math.PI)
@@ -457,7 +462,7 @@ function drawResizingDot() {
 }
 
 function drawRect() {
-  // draw the stroke of the surrounding rect
+  initDrag(getCurrentLine())
   gCtx.strokeStyle = '111'
   gCtx.lineWidth = 3
   gCtx.strokeRect(gDrag.rect.pos.x, gDrag.rect.pos.y, gDrag.rect.width, gDrag.rect.height)

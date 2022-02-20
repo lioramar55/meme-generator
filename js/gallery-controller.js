@@ -1,5 +1,7 @@
 'use strict'
 var gIsShowTags = false
+const pageSize = 8
+var gPageIdx = 0
 
 // Rendering
 
@@ -12,6 +14,15 @@ function renderGallery(isFilter) {
   })
   document.querySelector('.gallery').innerHTML = strHTMLs.join('')
 }
+
+function setPage(change) {
+  var totalImgs = getImagesForDisplay().length
+  var totalPages = Math.floor(totalImgs / pageSize)
+  gPageIdx += change
+  if (gPageIdx >= totalPages) gPageIdx = 0
+}
+
+function renderBtns() {}
 
 // Info section
 function renderInfoSection(displayAll = false) {
@@ -37,16 +48,14 @@ function renderInfoSection(displayAll = false) {
 //Memes
 
 function renderMemes(memeImgs) {
-  var strHTMLs = memeImgs.map((img) => {
+  memeImgs.forEach((img) => {
     document.querySelector('.memes-gallery').innerHTML = ''
     var elImg = new Image()
     elImg.src = img
     elImg.onload = () => {
-      strHTMLs += elImg
       document.querySelector('.memes-gallery').appendChild(elImg)
     }
   })
-  // document.querySelector('.memes-gallery').innerHTML = strHTMLs.join('')
 }
 
 // Show and hide sections
