@@ -3,6 +3,11 @@ footer {
   text-align: center;
 }
 
+footer select {
+  margin-inline-end: 1rem;
+  border: none;
+}
+
 footer div {
   height: 10vh;
 }

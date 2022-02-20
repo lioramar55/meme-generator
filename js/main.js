@@ -17,7 +17,7 @@ function addEventListeners() {
   document.querySelector('.memes-link').addEventListener('click', openMemes)
   document.querySelector('.about-link').addEventListener('click', openAbout)
   document.querySelector('.nav-burger').addEventListener('click', toggleMenu)
-  document.querySelector('.main-nav select').addEventListener('change', onSetLang)
+  document.querySelector('footer select').addEventListener('change', onSetLang)
   document.querySelector('.main-screen').addEventListener('click', toggleMenu)
   addEditorListeners()
 }

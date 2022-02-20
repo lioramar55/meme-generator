@@ -24,3 +24,16 @@
   transition: opacity 0.2s ease-out;
   display: none;
 }
+
+.page-btns button {
+  border: none;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 0.2rem;
+}
+
+.current-page {
+  background-color: var(--clr-img-hover);
+  color: aliceblue;
+}

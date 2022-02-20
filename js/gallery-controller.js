@@ -9,20 +9,36 @@ var gPageIdx = 0
 function renderGallery(isFilter) {
   var imgs = getImagesForDisplay()
   if (isFilter) imgs = imgs.filter((img) => img.keywords.includes(isFilter))
-  var strHTMLs = imgs.map((img) => {
-    return `<img onclick="onImgClick(${img.id}, this)" src="${img.imgURL}.jpg" />`
+  var strHTMLs = imgs.map((img, idx) => {
+    if (idx >= gPageIdx * pageSize && idx < gPageIdx * pageSize + pageSize) {
+      return `<img onclick="onImgClick(${img.id}, this)" src="${img.imgURL}.jpg" />`
+    }
   })
   document.querySelector('.gallery').innerHTML = strHTMLs.join('')
+  renderPageBtns()
 }
 
 function setPage(change) {
   var totalImgs = getImagesForDisplay().length
   var totalPages = Math.floor(totalImgs / pageSize)
-  gPageIdx += change
+  gPageIdx = change
   if (gPageIdx >= totalPages) gPageIdx = 0
+  renderGallery()
 }
 
-function renderBtns() {}
+function renderPageBtns() {
+  var totalImgs = getImagesForDisplay().length
+  var totalPages = Math.floor(totalImgs / pageSize)
+  var strHTML = ''
+  for (var i = 0; i < totalPages; i++) {
+    var className = ''
+    if (i === gPageIdx) className = 'current-page'
+    strHTML += `<button class="${className}" onclick="setPage(${i})" class="page-btn">${
+      i + 1
+    }</button>`
+  }
+  document.querySelector('.page-btns').innerHTML = strHTML
+}
 
 // Info section
 function renderInfoSection(displayAll = false) {
