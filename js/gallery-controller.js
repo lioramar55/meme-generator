@@ -73,7 +73,7 @@ function onTagClick(e, elTag) {
 }
 
 function onFlexibleClick() {
-  var meme = getFlexibleMeme()
+  var meme = getFlexibleMeme(gElCanvas.height)
   onImgClick(meme.selectedImgId)
 }
 
@@ -86,6 +86,9 @@ function onUserSearch(e) {
 
 function toggleTags(e) {
   gIsShowTags = !gIsShowTags
-  e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
+  var currLang = getCurrLang()
+  if (currLang === 'en') e.target.innerText = gIsShowTags ? 'Show Less' : 'Show More'
+  else e.target.innerText = gIsShowTags ? 'ראה פחות' : 'ראה יותר'
+
   renderInfoSection(gIsShowTags)
 }

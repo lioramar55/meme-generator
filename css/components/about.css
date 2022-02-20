@@ -1,7 +1,9 @@
 .about {
   display: flex;
   text-align: center;
-  gap: 4rem;
+  gap: 2rem;
+  margin-top: 25%;
+  align-items: center;
 }
 
 .about > * {
@@ -10,11 +12,7 @@
 
 .about img {
   border-radius: 50%;
-  height: 50%;
-}
-
-.about .text {
-  align-self: center;
+  width: 250px;
 }
 
 .hide-about {

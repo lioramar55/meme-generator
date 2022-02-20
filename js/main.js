@@ -20,6 +20,7 @@ function addEventListeners() {
   document.querySelector('.memes-link').addEventListener('click', openMemes)
   document.querySelector('.about-link').addEventListener('click', openAbout)
   document.querySelector('.nav-burger').addEventListener('click', toggleMenu)
+  document.querySelector('.main-nav select').addEventListener('change', onSetLang)
   document.querySelector('.main-screen').addEventListener('click', toggleMenu)
   addEditorListeners()
 }
@@ -50,6 +51,12 @@ function addEditorListeners() {
 }
 
 // opening the meme editor
+
+function onSetLang(e) {
+  var isEnglish = e.target.value === 'English' ? 'en' : 'he'
+  setLang(isEnglish)
+  doTrans()
+}
 
 function onImgClick(id) {
   // update the selected image
@@ -98,7 +105,8 @@ function openMemes() {
   document.querySelector('.memes-gallery').style.display = 'grid'
   document.querySelector('.about').classList.add('hide-about')
   document.querySelector('.gallery-container').classList.add('hide-gallery')
-  if (!memes || !memes.length) elMemesGallery.innerHTML = `<h2>You don't have any saved memes</h2>`
+  if (!memes || !memes.length)
+    elMemesGallery.innerHTML = `<h2 data-trans="memes-error">You don't have any saved memes</h2>`
   else {
     renderMemes(memes)
     toggleNotification()

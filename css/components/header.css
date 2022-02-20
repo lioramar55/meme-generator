@@ -28,6 +28,11 @@ header {
   text-decoration: none;
 }
 
+/* Language Select */
+
+.main-nav select {
+}
+
 /* Notification */
 
 .nav-list a.notification::after {

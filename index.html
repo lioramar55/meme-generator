@@ -14,10 +14,18 @@
         <div class="main-layout main-nav flex">
           <div class="logo"><img src="assets/imgs/LOGO.png" alt="Meme Generator Logo" /></div>
           <nav>
+            
             <ul class="nav-list clean-list flex">
-              <li><a href="#" class="nav-item gallery-link">Gallery</a></li>
-              <li><a href="#" class="nav-item memes-link">Memes</a></li>
-              <li><a href="#" class="nav-item about-link">About</a></li>
+               <li>
+                <select>
+                  <option>English</option>
+                  <option>עברית</option>
+                </select>
+              </li>
+              <li><a href="#" data-trans="gallery" class="nav-item gallery-link">Gallery</a></li>
+              <li><a href="#" data-trans="memes" class="nav-item memes-link">Memes</a></li>
+              <li><a href="#" data-trans="about" class="nav-item about-link">About</a></li>
+
             </ul>
             <button class="nav-burger">☰</button>
           </nav>
@@ -27,17 +35,16 @@
         <div class="main-layout gallery-container">
           <section class="info  flex justify-between">
             <div class="search">
-              <h2>Choose a template</h2>
-              <!-- <input type="search" placeholder="meme templates" /> -->
+              <h2 data-trans="editor-header">Choose a template</h2>
               <input  list="data-lists" id="data-list" name="data">
                 <datalist id="data-lists">
                 </datalist>
-              <button class="btn flexible">Flexible</button>
+              <button data-trans="flexible" class="btn flexible">Flexible</button>
             </div>
             <div class="tags">
-              <h2>Popular tags</h2>
+              <h2 data-trans="tags">Popular tags</h2>
               <ul class="clean-list"></ul>
-              <button class="btn">Show More</button>
+              <button data-trans="more" class="btn">Show More</button>
             </div>
           </section>
 
@@ -77,28 +84,28 @@
             </div>
             <button class="stickers-right"><img  src="assets/icons/right-arrow.png" alt=""></button>
             <button class="save-meme"><img src="assets/icons/save.png"></button>
-            <a class="download btn">Download</a>
+            <a class="download btn" data-trans="download">Download</a>
             <a  class="fb" hidden title="Share on Facebook" target="_blank"><img src="assets/icons/fb.png" ></a>
             <a  class="whatsapp" data-action="share/whatsapp/share" hidden target="_blank"><img src="assets/icons/whatsapp.png"></a>
-            <label for="upload" class="btn">Upload
+            <label for="upload" data-trans="upload" class="btn">Upload
               <input type="file" id="upload" name="upload">
             </label>
-            <button class="share btn">Share</button>
+            <button data-trans="share"  class="share btn">Share</button>
           </div>
         </section>
         <section class="memes-gallery hide-memes"></section>
         <section class="about hide-about">
           <div class="text">
 
-            <h2>Hey, my name is Lior Amar</h2>
-            <h3>Full-stack Developer</h3>
+            <h2 data-trans="about-header">Hey, my name is Lior Amar</h2>
+            <h3 data-trans="about-sub-header">Full-stack Developer</h3>
           </div>
           <img src="assets/imgs/about.jpg" >
         </section>
       </main>
       <footer>
         <div class="main-layout">
-          <h4>Meme-Generator by Lior R Amar 2022 &copy;</h4>
+          <h4 data-trans="footer">Meme-Generator by Lior R Amar 2022 &copy;</h4>
         </div>
       </footer>
     </div>
