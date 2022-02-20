@@ -82,7 +82,7 @@ function onTagClick(e, elTag) {
 }
 
 function onFlexibleClick() {
-  var meme = getFlexibleMeme(gElCanvas.height)
+  var meme = getFlexibleMeme()
   onImgClick(meme.selectedImgId)
 }
 

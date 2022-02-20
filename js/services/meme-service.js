@@ -164,17 +164,16 @@ function getTagsForDisplay() {
   return { tags: gKeywordSearchCountMap, tagCount: gTagCount }
 }
 
-function getFlexibleMeme(height) {
+function getFlexibleMeme() {
   var idx = rand(0, memesSentences.length - 1)
   var isTwoLines = Math.random() > 0.5 ? true : false
   resetMeme()
   gMeme.selectedImgId = idx
   idx = rand(0, memesSentences.length - 1)
   gMeme.lines[0].txt = memesSentences[idx]
-
   if (isTwoLines) {
     idx = rand(0, memesSentences.length - 1)
-    var newLine = getNewLine(memesSentences[idx], 100, height - 75)
+    var newLine = getNewLine(memesSentences[idx], 100, 300)
     gMeme.lines.push(newLine)
   }
   return gMeme

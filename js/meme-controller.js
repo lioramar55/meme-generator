@@ -143,7 +143,6 @@ function drawLines(meme) {
     var textWidth = gCtx.measureText(line.txt).width
     gCtx.fillStyle = line.color
     if (textWidth > gDrag.rect.width - 40) {
-      textWidth = gCtx.measureText(line.txt).width
       if (line.txt) {
         if (meme.lines[idx].stroke) {
           gCtx.strokeText(line.txt, line.x, line.y, gDrag.txtMaxWidth)
@@ -183,9 +182,6 @@ function initDrag(line) {
   }
   gDrag.rect.pos = { x: line.x - 20, y: line.y - 50 }
   gDrag.txtMaxWidth = gDrag.rect.width - 60
-  if (gDrag.txtMaxWidth >= gDrag.rect.width) {
-    gCtx.font = `${line.size}px ${line.font}`
-  }
 }
 
 function drawImageOnCanvas(img) {
@@ -443,18 +439,18 @@ function onSelectLine(selectedLine) {
   var meme = getMeme()
   if (!currLine || !currLine.txt) return
   // checking if user toggles between lines
-  if (selectedLine !== meme.selectedLineIdx && meme.lines.length > 1) drawCanvas()
+  if (selectedLine !== currLine && meme.lines.length > 1) drawCanvas()
   selectLine()
 }
 
 function selectLine() {
+  initDrag(getCurrentLine())
   drawRect()
   drawResizingDot()
 }
 
 function drawResizingDot() {
   //creating the little dot for resizing the line
-
   gCtx.beginPath()
   gCtx.fillStyle = gDrag.circle.color
   gCtx.arc(gDrag.circle.pos.x, gDrag.circle.pos.y, gDrag.circle.size, 0, 2 * Math.PI)
@@ -462,7 +458,6 @@ function drawResizingDot() {
 }
 
 function drawRect() {
-  initDrag(getCurrentLine())
   gCtx.strokeStyle = '111'
   gCtx.lineWidth = 3
   gCtx.strokeRect(gDrag.rect.pos.x, gDrag.rect.pos.y, gDrag.rect.width, gDrag.rect.height)
